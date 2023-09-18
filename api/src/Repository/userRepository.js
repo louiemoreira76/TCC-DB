@@ -28,3 +28,13 @@ AND    vl_codigo = ?`
     const [linhas] = await conx.query(comando, [email, senha, codigo]);
     return linhas[0]
 }
+
+export async function Novocliente (cliente){
+    const comando = `INSERT INTO tb_cliente (nm_cliente, ds_telefone, ds_cpf, ds_email, ds_senha)
+    VALUES (?, ?, ?, ?, ?);`
+
+    const [resposta] = await conx.query(comando, [cliente.nome, cliente.telefone, cliente.cpf, cliente.email, cliente.senha]);
+    cliente.id = resposta.insertId;
+
+    return cliente
+}

@@ -1,4 +1,4 @@
-import { loginCliente, loginAdmin } from '../Repository/userRepository.js';
+import { loginCliente, loginAdmin, Novocliente } from '../Repository/userRepository.js';
 
 import { Router } from "express";
 const server = Router();
@@ -33,6 +33,24 @@ server.post(`/admin/login`, async (req, resp) => {
         }
 
         resp.send(resposta)
+    }
+    catch (err){
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
+server.post('/usuario/cadastrar', async (req, resp) => {
+    try{
+        const usuarioInserir = req.body;
+
+
+
+
+        const Inserindo = await Novocliente(usuarioInserir)
+
+        resp.send(Inserindo);
     }
     catch (err){
         resp.status(400).send({

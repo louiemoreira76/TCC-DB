@@ -1,11 +1,66 @@
+POST
 Login do cliente
 {
   "email"	: "joao@email.com",
   "senha" : "senha123"
 }
+
+POST
 Login Admin
 {
   "email"	: "admin@admin.com.br",
   "senha" : "1234",
   "codigo" : "JK$)@),S(:#-JZb(K*.):h7}Ff}9;CZ|"
+}
+
+POST
+cADASTRO ou Inserir jogo(produto)
+{
+    "nome": "drzezahr",
+    "preco": "240.00",
+    "precoPro": "140.0",
+    "destaque": false,
+    "promocao": false,
+    "disponivel": false,
+    "qtd": "0",
+    "details": "sedfrgr",
+    "categoria": 1
+}
+
+GET (não necessario do body)
+Todos os produtos cadastrados 
+/produtos
+
+PUT (deu erradó) 
+alterar produto
+/produto/:id
+{
+    "nome": "funciona por favor",
+    "preco": "250.00",
+    "precoPro": "140.0",
+    "destaque": false,
+    "promocao": false,
+    "disponivel": false,
+    "qtd": "0",
+    "details": "sedfrgr",
+    "admin" : 1
+}
+
+DELETE
+deleter produto
+/produto/:id
+{
+
+}
+
+
+POST
+cadastrar cliente
+/usuario/cadastrar
+{
+  "nome"	: "Davi Luois",
+  "telefone" : "153 45328421",
+  "cpf" : "15345328418",
+  "email" : "teste@teste.bom",
+  "senha" : "153duehfepiw8421"
 }

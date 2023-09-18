@@ -5,7 +5,7 @@ import express from 'express';
 import cors from 'cors'
 
 import userController from './controller/userController.js'
-import jogoController from './controller/jogoController.js';
+import jogoController from './controller/jogoController.js'
 
 const server = express();
 server.use(cors());
