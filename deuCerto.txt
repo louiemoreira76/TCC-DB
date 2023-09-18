@@ -1,0 +1,11 @@
+Login do cliente
+{
+  "email"	: "joao@email.com",
+  "senha" : "senha123"
+}
+Login Admin
+{
+  "email"	: "admin@admin.com.br",
+  "senha" : "1234",
+  "codigo" : "JK$)@),S(:#-JZb(K*.):h7}Ff}9;CZ|"
+}
