@@ -45,6 +45,7 @@ CREATE TABLE tb_pedido (
 CREATE TABLE tb_produto (
     id_produto INT PRIMARY KEY AUTO_INCREMENT,
     id_categoria INT,
+    id_admin INT,
     nm_produto VARCHAR(255),
     vl_preco DECIMAL(15,2),
     vl_preco_promocional DECIMAL(15,2),
@@ -52,8 +53,9 @@ CREATE TABLE tb_produto (
     bt_promocao BOOLEAN,
     bt_disponivel BOOLEAN,
     qtd_estoque INT,
-    ds_detalhes TEXT, -- Corrigido: Adicionei o tipo de dado TEXT
-    FOREIGN KEY (id_categoria) REFERENCES tb_categoria (id_categoria)
+    ds_detalhes TEXT, -- Adicionei o tipo de dado TEXT
+    FOREIGN KEY (id_categoria) REFERENCES tb_categoria (id_categoria),
+    FOREIGN KEY (id_admin) REFERENCES tb_admin (id_admin)
 );
 
 CREATE TABLE tb_categoria (
@@ -91,6 +93,7 @@ CREATE TABLE tb_pedido_item (
 
 CREATE TABLE tb_jogo (
     id_jogos INT PRIMARY KEY AUTO_INCREMENT,
+    id_cliente	INT,
     nm_titulo VARCHAR(255),
     ds_genero VARCHAR(255),
     qtd_conquistas INT,
@@ -98,14 +101,16 @@ CREATE TABLE tb_jogo (
     dt_lancamento DATETIME,
     nr_tamanho DECIMAL(15,2),
     ds_empresa_publi VARCHAR(255),
-    ds_desenvolvedor VARCHAR(255)
+    ds_desenvolvedor VARCHAR(255),
+	FOREIGN KEY (id_cliente) REFERENCES tb_cliente (id_cliente)
 );
 
-CREATE TABLE tb_conquista (
-    id_conquistas INT PRIMARY KEY AUTO_INCREMENT,
-    id_jogos INT,
-    nm_conquista VARCHAR(255),
-    ds_descricao VARCHAR(255),
-    nr_pontos DECIMAL(15,2),
-    FOREIGN KEY (id_jogos) REFERENCES tb_jogo (id_jogos)
+CREATE TABLE tb_cartao (
+    id_cartao int primary key auto_increment,
+    id_cliente int,
+    numero_cartao varchar(16),
+    data_validade varchar(7),
+    cvv varchar(3),
+    nome_titular varchar(200),
+    foreign key (id_cliente) references tb_cliente(id_cliente)
 );
