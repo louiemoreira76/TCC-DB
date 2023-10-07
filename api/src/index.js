@@ -12,7 +12,7 @@ server.use(cors());
 server.use(express.json());
 
 
-//server.use('/tools/image', express.static('tools/image'));
+server.use('/tools/image', express.static('tools/image'));
 
 
 server.use(userController);

@@ -33,7 +33,7 @@ VALUES ('Brunex O Ninja', 'Ação', 10, 'Livre', '2023-08-18', 4.5, 'Empresa XYZ
 
 -- Alterar imagem do jogo
 UPDATE tb_produto_imagem
-SET img_jogo = '/storage/jogo/adshsf.jpg'
+SET img_produto = '/storage/jogo/adshsf.jpg'
 WHERE id_jogos = 1;
 
 -- Alterar jogo
@@ -92,4 +92,10 @@ VALUES ('Ninja Coder', 249.99, 139.99, 1, 1, 1, 100, 'Em "Code Ninja", você é 
 SELECT * FROM tb_categoria;
 
 INSERT INTO tb_categoria (nm_categoria)
-VALUES ('Teste');
+VALUES ('Ação'),
+       ('Terror'),
+       ('FPS');
+       
+SELECT * FROM tb_categoria_produto;
+
+SELECT * FROM tb_produto_imagem;

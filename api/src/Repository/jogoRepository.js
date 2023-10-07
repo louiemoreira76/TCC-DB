@@ -36,10 +36,11 @@ export async function alterarProduto(id, produto){
         bt_disponivel = ?,
         qtd_estoque =   ?,
         ds_detalhes =   ?,
-        id_admin        ?
+        id_categoria = ?,
+        id_admin     =  ?
     WHERE    id_produto = ?;
     `
-    const [resposta] = await conx.query(comando, [produto.nome, produto.preco, produto.precoPro, produto.destaque, produto.promocao, produto.disponivel, produto.qtd, produto.details, produto.admin, id])
+    const [resposta] = await conx.query(comando, [produto.nome, produto.preco, produto.precoPro, produto.destaque, produto.promocao, produto.disponivel, produto.qtd, produto.details, produto.categoria, produto.admin, id])
     return resposta.affectedRows;
 }
 
@@ -50,3 +51,15 @@ export async function deletarProduto(id){
     const [resposta] = await conx.query(comando, [id]);
     return resposta.affectedRows;
 };
+
+////////////////////////////////////////////////////////////////////////////////
+
+export async function AlterarImagem(imagem, id){
+    const comando = `
+    UPDATE tb_produto_imagem
+    SET img_produto =  ?
+    WHERE id_produto =  ?`;
+
+    const [resposta] = await conx.query(comando, [imagem, id]);
+    return resposta.affectedRows
+}

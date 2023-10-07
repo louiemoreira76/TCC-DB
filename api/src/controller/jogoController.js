@@ -1,7 +1,10 @@
-import { inserirProduto, todosJogos, alterarProduto, deletarProduto } from "../Repository/jogoRepository.js"
+import { inserirProduto, todosJogos, alterarProduto, deletarProduto, AlterarImagem } from "../Repository/jogoRepository.js"
 
 import { Router } from 'express';
 const server = Router();
+
+import multer from 'multer'; //img DB
+const upload = multer({dest: 'tools/image'});
 
 server.post('/produto', async(req, resp) => {
     try{
@@ -33,6 +36,9 @@ server.post('/produto', async(req, resp) => {
 
          if(!produtoParaInserir.categoria)
         throw new Error('Categoria não registrada')
+
+        if(!produtoParaInserir.admin)
+        throw new Error('Adiministrador não logado!')
 
         const RepositoryInseridoP = await inserirProduto(produtoParaInserir);
        
@@ -87,6 +93,9 @@ server.put('/produto/:id', async (req, resp) => {
         if (!produto.details)
         throw new Error('Detalhes do produto inserido são obrigatórios');
 
+        if(!produto.categoria)
+        throw new Error('Categoria não registrada')
+
         if (!produto.admin)
         throw new Error('O adiministrador não existe');
 
@@ -123,5 +132,27 @@ server.delete('/produto/:id', async (req, resp) => {
     }
 })
 
+server.put('/produto/:id/imagens', upload.array('imagens', 5), async (req, resp) => {
+    try{
+        const {id} = req.params;
+        const imagens = req.files.map(file => file.path); // Array de arquivos de imagem, por isso files
+
+        if (!imagens || imagens.length === 0){
+            throw new Error('Precisa escolher pelo menos uma imagem!')
+        }
+        // Lógica para salvar as imagens no banco de dados ou armazenamento
+        const resposta = await AlterarImagem(imagens, id);
+
+        if(resposta != 1)
+            throw new Error('A imagem não pode ser salva!')
+
+        resp.status(204).send();
+    }
+    catch(err){
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
 
 export default server;
