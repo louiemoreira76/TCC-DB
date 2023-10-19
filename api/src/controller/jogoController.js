@@ -11,28 +11,28 @@ server.post('/produto', async(req, resp) => {
         const produtoParaInserir = req.body  
 
         if(!produtoParaInserir.nome)
-            throw new Error('Nome do PRODUTO inserido é obrigatorio');
+            throw new Error('Nome do jogo inserido é obrigatorio');
 
         if(!produtoParaInserir.preco)
-        throw new Error('Sinopse do filme inserido é obrigatorio');
+        throw new Error('Preço do jogo inserido é obrigatorio');
 
         if(!produtoParaInserir.precoPro)
-            throw new Error('Avaliação do filme inserido é obrigatorio');
+            throw new Error('Avaliação do jogo inserido é obrigatorio');
 
-        if(!produtoParaInserir.destaque == undefined)
-         throw new Error('Lançamento do filme inserido é obrigatorio');
+        if(!produtoParaInserir.destaque === undefined)
+         throw new Error('Lançamento do jogo inserido é obrigatorio');
 
-         if(!produtoParaInserir.promocao == undefined)
-         throw new Error('Disponivel do filme inserido é obrigatorio');
+         if(!produtoParaInserir.promocao === undefined)
+         throw new Error('Disponivel do jogo inserido é obrigatorio');
         
-         if(!produtoParaInserir.disponivel == undefined)
-         throw new Error('Disponivel do filme inserido é obrigatorio');
+         if(!produtoParaInserir.disponivel === undefined)
+         throw new Error('Disponivel do jogo inserido é obrigatorio');
         
          if(!produtoParaInserir.qtd)
-         throw new Error('Disponivel do filme inserido é obrigatorio');
+         throw new Error('Disponivel do jogo inserido é obrigatorio');
 
          if(!produtoParaInserir.details)
-         throw new Error('Disponivel do filme inserido é obrigatorio');
+         throw new Error('Disponivel do jogo inserido é obrigatorio');
 
          if(!produtoParaInserir.categoria)
         throw new Error('Categoria não registrada')
@@ -41,10 +41,10 @@ server.post('/produto', async(req, resp) => {
         throw new Error('Adiministrador não logado!')
 
         const RepositoryInseridoP = await inserirProduto(produtoParaInserir);
-       
+
         resp.send(RepositoryInseridoP);
     }
-
+    
     catch (err){
         resp.status(400).send({
             erro: err.message
