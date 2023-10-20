@@ -9,6 +9,7 @@ const upload = multer({dest: 'tools/image'});
 server.post('/produto', async(req, resp) => {
     try{
         const produtoParaInserir = req.body  
+        console.log(produtoParaInserir);
 
         if(!produtoParaInserir.nome)
             throw new Error('Nome do jogo inserido é obrigatorio');
@@ -140,8 +141,12 @@ server.put('/produto/:id/imagens', upload.array('imagens', 5), async (req, resp)
         if (!imagens || imagens.length === 0){
             throw new Error('Precisa escolher pelo menos uma imagem!')
         }
+
+        console.log({imagem: imagens[0], id: id});
+
         // Lógica para salvar as imagens no banco de dados ou armazenamento
-        const resposta = await AlterarImagem(imagens, id);
+        const resposta = await AlterarImagem(imagens[0], id);
+        console.log({resposta});
 
         if(resposta != 1)
             throw new Error('A imagem não pode ser salva!')
@@ -149,6 +154,7 @@ server.put('/produto/:id/imagens', upload.array('imagens', 5), async (req, resp)
         resp.status(204).send();
     }
     catch(err){
+        console.log(err);
         resp.status(400).send({
             erro: err.message
         })
