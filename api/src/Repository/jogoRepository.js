@@ -62,3 +62,25 @@ export async function AlterarImagem(imagem, id){
     const [resposta] = await conx.query(comando, [id, imagem]);
     return resposta.affectedRows
 }
+
+///para adicionar na tabela intermediaria 
+export async function TBcategoriaProduto(tabela){
+    try {
+        const comando = `
+          INSERT INTO tb_categoria_produto (id_categoria, id_produto, data_associacao)
+          VALUES (?, ?, CURDATE());
+        `;
+    
+        const [resposta] = await conx.query(comando, [tabela.categoria, tabela.produto]);
+    
+        if (resposta && resposta.insertId) {
+          tabela.id = resposta.insertId;
+          return tabela;
+        } else {
+          throw new Error('Erro ao inserir associação na tabela tb_categoria_produto');
+        }
+      } catch (error) {
+        console.error('Erro ao inserir associação na tabela tb_categoria_produto:', error);
+        throw error;
+      }
+    }

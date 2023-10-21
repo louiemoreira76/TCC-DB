@@ -22,8 +22,8 @@ AND ds_senha = '1234';
 SELECT id_cliente AS id,
        ds_email AS email
 FROM tb_cliente
-WHERE ds_email = 'admin@admin.com.br'
-AND ds_senha = '1234';
+WHERE ds_email = 'joao@email.com'
+AND ds_senha = 'senha123';
 
 -- Cadastrar novo jogo
 INSERT INTO tb_jogo (nm_titulo, ds_genero, qtd_conquistas, ds_classificacao, dt_lancamento, nr_tamanho, ds_empresa_publi, ds_desenvolvedor)
@@ -99,3 +99,6 @@ VALUES ('Ação'),
 SELECT * FROM tb_categoria_produto;
 
 SELECT * FROM tb_produto_imagem;
+
+INSERT INTO tb_categoria_produto (id_categoria, id_produto, data_associacao)
+VALUES (1, 1, CURDATE());

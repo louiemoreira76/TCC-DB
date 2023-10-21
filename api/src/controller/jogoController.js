@@ -1,4 +1,4 @@
-import { inserirProduto, todosJogos, alterarProduto, deletarProduto, AlterarImagem } from "../Repository/jogoRepository.js"
+import { inserirProduto, todosJogos, alterarProduto, deletarProduto, AlterarImagem, TBcategoriaProduto } from "../Repository/jogoRepository.js"
 
 import { Router } from 'express';
 const server = Router();
@@ -18,7 +18,7 @@ server.post('/produto', async(req, resp) => {
         throw new Error('Preço do jogo inserido é obrigatorio');
 
         if(!produtoParaInserir.precoPro)
-            throw new Error('Avaliação do jogo inserido é obrigatorio');
+            throw new Error('Preço Promocional inserido é obrigatorio');
 
         if(!produtoParaInserir.destaque === undefined)
          throw new Error('Lançamento do jogo inserido é obrigatorio');
@@ -158,6 +158,28 @@ server.put('/produto/:id/imagens', upload.array('imagens', 5), async (req, resp)
         resp.status(400).send({
             erro: err.message
         })
+    }
+})
+
+///para adicionar na tabela intermediaria 
+server.post('/produto/categoria', async(req, resp) => {
+    try{
+        const IDcategoriaPro = req.body
+
+        if(!IDcategoriaPro.categoria)
+        throw new Error ('ID da Categoria não pode ser inserida no sistema')
+
+        if(!IDcategoriaPro.produto)
+        throw new Error ('ID do produto não pode ser inserida no sistema')
+
+        const InsertCategoriaProduto = await TBcategoriaProduto(IDcategoriaPro)
+
+        resp.send(InsertCategoriaProduto)
+    }
+    catch(err){
+        resp.status(400).send({
+            erro: err.message
+        })  
     }
 })
 

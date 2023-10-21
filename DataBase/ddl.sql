@@ -2,7 +2,6 @@ CREATE DATABASE GameSync;
 
 USE GameSync;
 
-
 CREATE TABLE tb_admin (
 	id_admin int primary key auto_increment,
 	ds_email varchar(200),
@@ -42,6 +41,11 @@ CREATE TABLE tb_pedido (
     FOREIGN KEY (id_endereco_entrega) REFERENCES tb_endereco (id_endereco)
 );
 
+	CREATE TABLE tb_categoria (
+		id_categoria INT PRIMARY KEY AUTO_INCREMENT,
+		nm_categoria VARCHAR(255)
+	);
+
 CREATE TABLE tb_produto (
     id_produto INT PRIMARY KEY AUTO_INCREMENT,
     id_categoria INT,
@@ -56,11 +60,6 @@ CREATE TABLE tb_produto (
     ds_detalhes TEXT, -- Adicionei o tipo de dado TEXT
     FOREIGN KEY (id_categoria) REFERENCES tb_categoria (id_categoria),
     FOREIGN KEY (id_admin) REFERENCES tb_admin (id_admin)
-);
-
-CREATE TABLE tb_categoria (
-    id_categoria INT PRIMARY KEY AUTO_INCREMENT,
-    nm_categoria VARCHAR(255)
 );
 
 CREATE TABLE tb_categoria_produto (
@@ -113,4 +112,18 @@ CREATE TABLE tb_cartao (
     cvv varchar(3),
     nome_titular varchar(200),
     foreign key (id_cliente) references tb_cliente(id_cliente)
+);
+
+
+
+
+
+
+CREATE TABLE tb_conquista (
+    id_conquistas INT PRIMARY KEY AUTO_INCREMENT,
+    id_jogos INT,
+    nm_conquista VARCHAR(255),
+    ds_descricao VARCHAR(255),
+    nr_pontos DECIMAL(15,2),
+    FOREIGN KEY (id_jogos) REFERENCES tb_jogo (id_jogos)
 );
