@@ -1,4 +1,4 @@
-import { inserirProduto, todosJogos, alterarProduto, deletarProduto, AlterarImagem, TBcategoriaProduto } from "../Repository/jogoRepository.js"
+import { inserirProduto, todosJogos, alterarProduto, deletarProduto, AlterarImagem, TBcategoriaProduto, BuscarJogoNM } from "../Repository/jogoRepository.js"
 
 import { Router } from 'express';
 const server = Router();
@@ -182,5 +182,29 @@ server.post('/produto/categoria', async(req, resp) => {
         })  
     }
 })
+
+server.get('/produto/buscar', async (req, res) => {
+    try {
+        const { nome } = req.query; // Usar req.query para obter os parâmetros da URL
+
+        if (!nome) {
+            res.status(400).send({ erro: 'O parâmetro "nome" é obrigatório.' });
+            return;
+        }
+
+        const resposta = await BuscarJogoNM(nome);
+
+        if (resposta.length === 0) {
+            res.status(404).send([]);
+        } else {
+            res.send(resposta);
+        }
+    } catch (err) {
+        res.status(500).send({
+            erro: err.message
+        });
+    }
+});
+
 
 export default server;

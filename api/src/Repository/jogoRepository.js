@@ -84,3 +84,22 @@ export async function TBcategoriaProduto(tabela){
         throw error;
       }
     }
+
+export async function BuscarJogoNM(nome){
+    const comando = `
+    SELECT id_produto id,
+      id_categoria,
+      id_admin,
+      nm_produto  nome,
+      vl_preco  preco,
+      vl_preco_promocional preco_promocional,
+      bt_destaque destaque,
+      bt_promocao promocao,
+      bt_disponivel disponivel,
+      qtd_estoque quantidade_estoque,
+      ds_detalhes detalhes
+      FROM tb_produto
+      WHERE nm_produto LIKE ?;`
+      const [linhas] = await conx.query(comando, [`%${nome}%`]);
+      return linhas
+    }
