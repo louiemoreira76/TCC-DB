@@ -46,8 +46,9 @@ export async function alterarProduto(id, produto){
 
 export async function deletarProduto(id){
     const comando =`
-    DELETE FROM tb_produto
-        WHERE id_produto = ?`;
+    SET foreign_key_checks = 0; 
+    DELETE FROM tb_produto WHERE id_produto = ?;
+    SET foreign_key_checks = 1;`;
     const [resposta] = await conx.query(comando, [id]);
     return resposta.affectedRows;
 };

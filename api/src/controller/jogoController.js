@@ -117,6 +117,7 @@ server.put('/produto/:id', async (req, resp) => {
 
 server.delete('/produto/:id', async (req, resp) => {
     try{
+        
         const { id } = req.params;
 
         const resposta = await deletarProduto(id);

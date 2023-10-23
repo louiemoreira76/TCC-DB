@@ -50,7 +50,14 @@ WHERE id_jogos = 1;
 
 -- Remover jogo
 DELETE FROM tb_jogo
-WHERE id_jogos = 1;
+WHERE id_jogos = 2;
+
+SET foreign_key_checks = 0; 
+DELETE FROM tb_produto WHERE id_produto = 2;
+SET foreign_key_checks = 1;
+-- ou um desses dois para deletar 
+DELETE FROM tb_produto
+WHERE id_produto = 1;
 
 -- Consultar todos jogos
 SELECT id_jogos AS id,
