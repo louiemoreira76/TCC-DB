@@ -78,6 +78,13 @@ CREATE TABLE tb_produto_imagem (
     FOREIGN KEY (id_produto) REFERENCES tb_produto (id_produto)
 );
 
+CREATE TABLE tb_produto_video (
+    id_produto_video INT PRIMARY KEY AUTO_INCREMENT,
+    id_produto INT,
+    url_video VARCHAR(255),
+    FOREIGN KEY (id_jogos) REFERENCES tb_jogo (id_jogos)
+);
+
 CREATE TABLE tb_pedido_item (
     id_pedido_item INT PRIMARY KEY AUTO_INCREMENT,
     id_pedido INT,

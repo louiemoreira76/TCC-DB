@@ -64,6 +64,19 @@ export async function AlterarImagem(imagem, id){
     return resposta.affectedRows
 }
 
+export async function InserirVideo(video, idProduto) {
+  try {
+    const comando = 'INSERT INTO tb_produto_video (id_produto, url_video) VALUES (?, ?)';
+    const [resposta] = await conx.query(comando, [idProduto, video]);
+    
+    return resposta.affectedRows;
+  } catch (erro) {
+    
+    console.error('Erro ao inserir o vídeo:', erro);
+    throw erro; 
+  }
+}
+
 ///para adicionar na tabela intermediaria 
 export async function TBcategoriaProduto(tabela){
     try {
