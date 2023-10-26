@@ -13,7 +13,7 @@ server.use(express.json());
 
 
 server.use('/tools/image', express.static('tools/image'));
-
+server.use('/tools/videos', express.static('tools/videos'));
 
 server.use(userController);
 server.use(jogoController);

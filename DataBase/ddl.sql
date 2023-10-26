@@ -62,7 +62,6 @@ CREATE TABLE tb_produto (
     dt_lancamento DATETIME,
     ds_tamanho VARCHAR(15),
     ds_empresa_publi VARCHAR(255),
-    img_principal	VARCHAR(255),
     ds_desenvolvedor VARCHAR(255),
     FOREIGN KEY (id_categoria) REFERENCES tb_categoria (id_categoria),
     FOREIGN KEY (id_admin) REFERENCES tb_admin (id_admin)

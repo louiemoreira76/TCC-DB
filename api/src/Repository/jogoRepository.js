@@ -1,15 +1,27 @@
 import { conx } from "./connecion.js";
 
 ///Parte do Produto
-export async function inserirProduto (produto){
-    const comando = `INSERT INTO tb_produto (id_categoria, nm_produto, vl_preco, vl_preco_promocional, bt_destaque, bt_promocao, bt_disponivel, qtd_estoque, ds_detalhes)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`
+export async function inserirProduto(produto) {
+  const comando = `
+  INSERT INTO tb_produto (
+    id_categoria, nm_produto, vl_preco, vl_preco_promocional, bt_destaque, bt_promocao, bt_disponivel,
+    qtd_estoque, ds_descricao, ds_classificacao, dt_lancamento, ds_tamanho, ds_empresa_publi, ds_desenvolvedor, id_admin
+  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+`;
 
-    const [resposta] = await conx.query(comando, [produto.categoria, produto.nome, produto.preco, produto.precoPro, produto.destaque, produto.promocao, produto.disponivel, produto.qtd, produto.details]);
-    produto.id = resposta.insertId;
+const valores = [
+  produto.categoria, produto.nome, produto.preco, produto.precoPro, produto.destaque,
+  produto.promocao, produto.disponivel, produto.qtd, produto.descricao, produto.classificacao,
+  produto.lancamento, produto.tamanho, produto.empresa, produto.desenvolvedor, produto.admin
+];
 
-    return produto;
+
+  const [resposta] = await conx.query(comando, valores);
+  produto.id = resposta.insertId;
+
+  return resposta
 }
+
 
 export async function todosJogos(){
     const comando = `
@@ -18,7 +30,7 @@ export async function todosJogos(){
     vl_preco          valor,
     vl_preco_promocional     promocao,
     qtd_estoque       estoque,
-    ds_detalhes       descricao
+    ds_descricao       descricao
     FROM tb_produto;`
 
     const [linhas] = await conx.query(comando);
@@ -35,12 +47,12 @@ export async function alterarProduto(id, produto){
         bt_promocao =   ?,
         bt_disponivel = ?,
         qtd_estoque =   ?,
-        ds_detalhes =   ?,
+        ds_descricao =   ?,
         id_categoria = ?,
         id_admin     =  ?
     WHERE    id_produto = ?;
     `
-    const [resposta] = await conx.query(comando, [produto.nome, produto.preco, produto.precoPro, produto.destaque, produto.promocao, produto.disponivel, produto.qtd, produto.details, produto.categoria, produto.admin, id])
+    const [resposta] = await conx.query(comando, [produto.nome, produto.preco, produto.precoPro, produto.destaque, produto.promocao, produto.disponivel, produto.qtd, produto.descricao, produto.categoria, produto.admin, id])
     return resposta.affectedRows;
 }
 
@@ -111,7 +123,7 @@ export async function BuscarJogoNM(nome){
       bt_promocao promocao,
       bt_disponivel disponivel,
       qtd_estoque quantidade_estoque,
-      ds_detalhes detalhes
+      ds_descricao descricao
       FROM tb_produto
       WHERE nm_produto LIKE ?;`
       const [linhas] = await conx.query(comando, [`%${nome}%`]);

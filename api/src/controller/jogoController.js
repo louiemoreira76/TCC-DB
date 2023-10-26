@@ -6,52 +6,53 @@ const server = Router();
 import multer from 'multer'; //img DB
 const upload = multer({dest: 'tools/image'});
 
-server.post('/produto', async(req, resp) => {
-    try{
-        const produtoParaInserir = req.body  
-        console.log(produtoParaInserir);
 
-        if(!produtoParaInserir.nome)
-            throw new Error('Nome do jogo inserido é obrigatorio');
+server.post('/produto', async (req, resp) => {
+    try {
+        const produtoParaInserir = req.body;
 
-        if(!produtoParaInserir.preco)
-        throw new Error('Preço do jogo inserido é obrigatorio');
+        // Valide se todos os campos obrigatórios estão presentes
+        const camposObrigatorios = [
+            'nome', 'preco', 'precoPro', 'qtd', 'descricao', 'categoria', 'classificacao',
+            'lancamento', 'tamanho', 'empresa', 'desenvolvedor', 'admin'
+        ];
 
-        if(!produtoParaInserir.precoPro)
-            throw new Error('Preço Promocional inserido é obrigatorio');
+        for (const campo of camposObrigatorios) {
+            if (!produtoParaInserir[campo]) {
+                throw new Error(`O campo "${campo}" é obrigatório.`);
+            }
+        }
 
-        if(!produtoParaInserir.destaque === undefined)
-         throw new Error('Lançamento do jogo inserido é obrigatorio');
+        if (!produtoParaInserir.admin) {
+            throw new Error('Administrador não logado!');
+        }
 
-         if(!produtoParaInserir.promocao === undefined)
-         throw new Error('Disponivel do jogo inserido é obrigatorio');
-        
-         if(!produtoParaInserir.disponivel === undefined)
-         throw new Error('Disponivel do jogo inserido é obrigatorio');
-        
-         if(!produtoParaInserir.qtd)
-         throw new Error('Disponivel do jogo inserido é obrigatorio');
+        // Defina o campo 'disponivel' como false se não estiver presente no corpo da solicitação
+        if (produtoParaInserir.disponivel === undefined) {
+            produtoParaInserir.disponivel = false;
+        }
 
-         if(!produtoParaInserir.details)
-         throw new Error('Disponivel do jogo inserido é obrigatorio');
+        // Defina os campos 'promocao' e 'destaque' como false se não estiverem definidos
+        if (produtoParaInserir.promocao === undefined) {
+            produtoParaInserir.promocao = false;
+        }
 
-         if(!produtoParaInserir.categoria)
-        throw new Error('Categoria não registrada')
+        if (produtoParaInserir.destaque === undefined) {
+            produtoParaInserir.destaque = false;
+        }
 
-        if(!produtoParaInserir.admin)
-        throw new Error('Adiministrador não logado!')
 
         const RepositoryInseridoP = await inserirProduto(produtoParaInserir);
 
         resp.send(RepositoryInseridoP);
-    }
-    
-    catch (err){
+    } catch (err) {
         resp.status(400).send({
             erro: err.message
-        })
+        });
     }
-})
+});
+
+
 
 server.get('/produtos', async (req, resp) => {
     try{
@@ -65,10 +66,16 @@ server.get('/produtos', async (req, resp) => {
     }
 })
 
-server.put('/produto/:id', async (req, resp) => {
+server.put('/produto/:id', upload.array('imagens'), async (req, resp) => {
     try{
         const { id } = req.params;
         const produto = req.body;
+
+        const imagens = req.files.map(file => file.path); // Array de arquivos de imagem, por isso files
+
+        if (!imagens || imagens.length === 0){
+            throw new Error('Precisa escolher pelo menos uma imagem!')
+        }
 
         if(!produto.nome)
         throw new Error('Nome do produto inserido é obrigatorio');
@@ -91,8 +98,8 @@ server.put('/produto/:id', async (req, resp) => {
         if (!produto.qtd)
         throw new Error('Quantidade em estoque do produto inserido é obrigatória');
 
-        if (!produto.details)
-        throw new Error('Detalhes do produto inserido são obrigatórios');
+        if (!produto.descricao)
+        throw new Error('descricao do produto inserido são obrigatórios');
 
         if(!produto.categoria)
         throw new Error('Categoria não registrada')
