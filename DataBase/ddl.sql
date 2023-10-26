@@ -57,7 +57,13 @@ CREATE TABLE tb_produto (
     bt_promocao BOOLEAN,
     bt_disponivel BOOLEAN,
     qtd_estoque INT,
-    ds_detalhes TEXT, -- Adicionei o tipo de dado TEXT
+    ds_descricao TEXT, -- Adicionei o tipo de dado TEXT
+    ds_classificacao VARCHAR(50),
+    dt_lancamento DATETIME,
+    ds_tamanho VARCHAR(15),
+    ds_empresa_publi VARCHAR(255),
+    img_principal	VARCHAR(255),
+    ds_desenvolvedor VARCHAR(255),
     FOREIGN KEY (id_categoria) REFERENCES tb_categoria (id_categoria),
     FOREIGN KEY (id_admin) REFERENCES tb_admin (id_admin)
 );
@@ -82,7 +88,7 @@ CREATE TABLE tb_produto_video (
     id_produto_video INT PRIMARY KEY AUTO_INCREMENT,
     id_produto INT,
     url_video VARCHAR(255),
-    FOREIGN KEY (id_jogos) REFERENCES tb_jogo (id_jogos)
+    FOREIGN KEY (id_produto) REFERENCES tb_produto (id_produto)
 );
 
 CREATE TABLE tb_pedido_item (
@@ -93,22 +99,6 @@ CREATE TABLE tb_pedido_item (
     vl_preco DECIMAL(15,2),
     FOREIGN KEY (id_pedido) REFERENCES tb_pedido (id_pedido),
     FOREIGN KEY (id_produto) REFERENCES tb_produto (id_produto)
-);
-
-/*Parte do jogo*/
-
-CREATE TABLE tb_jogo (
-    id_jogos INT PRIMARY KEY AUTO_INCREMENT,
-    id_cliente	INT,
-    nm_titulo VARCHAR(255),
-    ds_genero VARCHAR(255),
-    qtd_conquistas INT,
-    ds_classificacao VARCHAR(50),
-    dt_lancamento DATETIME,
-    nr_tamanho DECIMAL(15,2),
-    ds_empresa_publi VARCHAR(255),
-    ds_desenvolvedor VARCHAR(255),
-	FOREIGN KEY (id_cliente) REFERENCES tb_cliente (id_cliente)
 );
 
 CREATE TABLE tb_cartao (
@@ -132,5 +122,6 @@ CREATE TABLE tb_conquista (
     nm_conquista VARCHAR(255),
     ds_descricao VARCHAR(255),
     nr_pontos DECIMAL(15,2),
+    img_conquista VARCHAR(255),
     FOREIGN KEY (id_jogos) REFERENCES tb_jogo (id_jogos)
 );
