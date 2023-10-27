@@ -2,24 +2,13 @@ import { conx } from "./connecion.js";
 
 ///Parte do Produto
 export async function inserirProduto(produto) {
-  const comando = `
-  INSERT INTO tb_produto (
-    id_categoria, nm_produto, vl_preco, vl_preco_promocional, bt_destaque, bt_promocao, bt_disponivel,
-    qtd_estoque, ds_descricao, ds_classificacao, dt_lancamento, ds_tamanho, ds_empresa_publi, ds_desenvolvedor, id_admin
-  ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-`;
+  const comando = `INSERT INTO tb_produto (id_categoria, nm_produto, vl_preco, vl_preco_promocional, bt_destaque, bt_promocao, bt_disponivel, qtd_estoque, ds_detalhes)
+  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`
 
-const valores = [
-  produto.categoria, produto.nome, produto.preco, produto.precoPro, produto.destaque,
-  produto.promocao, produto.disponivel, produto.qtd, produto.descricao, produto.classificacao,
-  produto.lancamento, produto.tamanho, produto.empresa, produto.desenvolvedor, produto.admin
-];
-
-
-  const [resposta] = await conx.query(comando, valores);
+  const [resposta] = await conx.query(comando, [produto.categoria, produto.nome, produto.preco, produto.precoPro, produto.destaque, produto.promocao, produto.disponivel, produto.qtd, produto.details]);
   produto.id = resposta.insertId;
 
-  return resposta
+  return produto;
 }
 
 
@@ -30,7 +19,7 @@ export async function todosJogos(){
     vl_preco          valor,
     vl_preco_promocional     promocao,
     qtd_estoque       estoque,
-    ds_descricao       descricao
+    ds_detalhes       descricao
     FROM tb_produto;`
 
     const [linhas] = await conx.query(comando);
