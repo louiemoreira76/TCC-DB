@@ -2,15 +2,24 @@ import { conx } from "./connecion.js";
 
 ///Parte do Produto
 export async function inserirProduto(produto) {
-  const comando = `INSERT INTO tb_produto (id_categoria, nm_produto, vl_preco, vl_preco_promocional, bt_destaque, bt_promocao, bt_disponivel, qtd_estoque, ds_detalhes)
-  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);`
+  const comando = `
+    INSERT INTO tb_produto (
+      id_admin, id_categoria, nm_produto, vl_preco, vl_preco_promocional, bt_destaque, bt_promocao, bt_disponivel,
+      qtd_estoque, ds_descricao, ds_classificacao, dt_lancamento, ds_tamanho, ds_empresa_publi, ds_desenvolvedor
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+  `;
 
-  const [resposta] = await conx.query(comando, [produto.categoria, produto.nome, produto.preco, produto.precoPro, produto.destaque, produto.promocao, produto.disponivel, produto.qtd, produto.details]);
-  produto.id = resposta.insertId;
+const valores = [
+  produto.admin, produto.categoria, produto.nome, produto.preco, produto.precoPro, produto.destaque,
+  produto.promocao, produto.disponivel, produto.qtd, produto.descricao, 
+  produto.classificacao, produto.lancamento, produto.tamanho, produto.empresa, produto.desenvolvedor
+];
 
-  return produto;
+const [resposta] = await conx.query(comando, valores);
+produto.id = resposta.insertId;
+
+return resposta
 }
-
 
 export async function todosJogos(){
     const comando = `
@@ -47,9 +56,8 @@ export async function alterarProduto(id, produto){
 
 export async function deletarProduto(id){
     const comando =`
-    SET foreign_key_checks = 0; 
-    DELETE FROM tb_produto WHERE id_produto = ?;
-    SET foreign_key_checks = 1;`;
+    DELETE FROM tb_produto
+    WHERE id_produto = ?;`;
     const [resposta] = await conx.query(comando, [id]);
     return resposta.affectedRows;
 };
