@@ -1,4 +1,5 @@
-import { inserirProduto, todosJogos, alterarProduto, deletarProduto, AlterarImagem, TBcategoriaProduto, BuscarJogoNM } from "../Repository/jogoRepository.js"
+import { inserirProduto, todosJogos, alterarProduto, deletarProduto, AlterarImagem, TBcategoriaProduto, 
+        BuscarJogoNM, BuscarJogoID, InserirVideo } from "../Repository/jogoRepository.js"
 
 import { Router } from 'express';
 const server = Router();
@@ -43,7 +44,7 @@ server.post('/produto', async (req, resp) => {
         
         const RepositoryInseridoP = await inserirProduto(produtoParaInserir);
 
-        resp.send(RepositoryInseridoP);
+         resp.status(200).send(produtoInserido);
 
     } catch (err) {
         resp.status(400).send({
@@ -65,54 +66,34 @@ server.get('/produtos', async (req, resp) => {
 })
 
 server.put('/produto/:id', async (req, resp) => {
-    try{
+    try {
         const { id } = req.params;
         const produto = req.body;
 
-        if(!produto.nome)
-        throw new Error('Nome do produto inserido é obrigatorio');
+        // Verificar se o ID do produto é um número válido
+        if (isNaN(id)) {
+            throw new Error('ID do produto não é válido.');
+        }
 
-        if (!produto.preco)
-        throw new Error('Preço do produto inserido é obrigatório');
-
-        if (!produto.precoPro)
-        throw new Error('Preço promocional do produto inserido é obrigatório');
-
-        if (produto.destaque === undefined)
-        throw new Error('Campo destaque do produto inserido é obrigatório');
-
-        if (produto.promocao === undefined)
-        throw new Error('Campo promoção do produto inserido é obrigatório');
-
-        if (produto.disponivel === undefined)
-        throw new Error('Campo disponível do produto inserido é obrigatório');
-
-        if (!produto.qtd)
-        throw new Error('Quantidade em estoque do produto inserido é obrigatória');
-
-        if (!produto.details)
-        throw new Error('descricao do produto inserido são obrigatórios');
-
-        if(!produto.categoria)
-        throw new Error('Categoria não registrada')
-
-        if (!produto.admin)
-        throw new Error('O adiministrador não existe');
+        // Verificar se pelo menos um dos campos a serem atualizados foi fornecido no corpo da solicitação
+        if (!produto.nome && !produto.preco && !produto.precoPro && produto.destaque === undefined && produto.promocao === undefined && produto.disponivel === undefined && !produto.qtd && !produto.descricao && !produto.categoria && !produto.admin) {
+            throw new Error('Nenhum campo a ser atualizado foi fornecido.');
+        }
 
         const resposta = await alterarProduto(id, produto);
 
-        if (resposta !== 1)
-        throw new Error('Produto não pode ser alterado!')
-
-        else
+        if (resposta !== 1) {
+            throw new Error('Produto não pode ser alterado.');
+        } else {
             resp.status(204).send();
-    }
-    catch (err){
+        }
+    } catch (err) {
         resp.status(400).send({
             erro: err.message
-        })
+        });
     }
-})
+});
+
 
 server.delete('/produto/:id', async (req, resp) => {
     try{
@@ -161,6 +142,28 @@ server.put('/produto/:id/imagens', upload.array('imagens', 5), async (req, resp)
     }
 })
 
+server.put('/produto/video/url', async(req, resp) => {
+    try{
+        const video = req.body
+
+        if(!video.produto)
+        throw new Error ('id do produto não vilculado ao video')
+
+        if (!video.url)
+        throw new Error ('url tem que ser inserida')
+
+        const EnviarUrl = await InserirVideo(video)
+
+        resp.send(EnviarUrl)
+
+    }
+    catch(err){
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
 ///para adicionar na tabela intermediaria 
 server.post('/produto/categoria', async(req, resp) => {
     try{
@@ -183,28 +186,52 @@ server.post('/produto/categoria', async(req, resp) => {
     }
 })
 
-server.get('/produto/buscar', async (req, res) => {
+server.get('/produto/:nome', async (req, resp) => {
     try {
-        const { nome } = req.query; // Usar req.query para obter os parâmetros da URL
+        const { nome } = req.params; // Usar req.query para obter os parâmetros da URL e ai tá errado
 
         if (!nome) {
-            res.status(400).send({ erro: 'O parâmetro "nome" é obrigatório.' });
+            resp.status(400).send({ erro: 'O parâmetro "nome" é obrigatório.' });
             return;
         }
 
         const resposta = await BuscarJogoNM(nome);
 
         if (resposta.length === 0) {
-            res.status(404).send([]);
+            resp.status(404).send([]);
         } else {
-            res.send(resposta);
+            resp.send(resposta);
         }
     } catch (err) {
-        res.status(500).send({
+        resp.status(500).send({
             erro: err.message
         });
     }
 });
+
+server.get('/produto/busca/:id', async (req, resp) => {
+    try {
+        const { id } = req.params; // parametro na url
+
+        if (!id) {
+            resp.status(400).send({ erro: 'O parâmetro "id" é obrigatório.' });
+            return;
+        }
+
+        const resposta = await BuscarJogoID(id);
+
+        if (!resposta) {
+            resp.status(404).send([]);
+        } else {
+            resp.send(resposta);
+        }
+    } catch (err) {
+        resp.status(500).send({
+            erro: err.message
+        });
+    }
+});
+
 
 
 export default server;

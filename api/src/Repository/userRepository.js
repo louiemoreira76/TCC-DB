@@ -20,10 +20,10 @@ export async function loginAdmin(email, senha, codigo){
     `SELECT id_admin id,
         ds_email     email,
         ds_senha    senha
-FROM tb_admin
-WHERE   ds_email = ?
-AND     ds_senha = ?
-AND    vl_codigo = ?`
+    FROM tb_admin
+    WHERE   ds_email = ?
+    AND     ds_senha = ?
+    AND    vl_codigo = ?`
 
     const [linhas] = await conx.query(comando, [email, senha, codigo]);
     return linhas[0]
@@ -37,4 +37,15 @@ export async function Novocliente (cliente){
     cliente.id = resposta.insertId;
 
     return cliente
+}
+
+export async function MudarSenhaAdm (NewSenha, id){
+    const comando = `
+    UPDATE tb_admin
+    SET ds_senha = ?
+    WHERE id_admin = ?;`
+
+    const [resposta] = await conx.query(comando, [NewSenha.senha, id]);
+
+    return resposta.affectedRows
 }

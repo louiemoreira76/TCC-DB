@@ -1,12 +1,12 @@
 USE GameSync;
 
 -- carga inicial usuario adim
-INSERT INTO tb_admin (ds_email, ds_senha, vl_codigo)
-VALUES ('admin@admin.com.br', '1234', 'JK$)@),S(:#-JZb(K*.):h7}Ff}9;CZ|');
+INSERT INTO tb_admin (nm_admin, ds_email, ds_senha, vl_codigo)
+VALUES ('Luis Felipi', 'admin@admin.com.br', '1234', 'JK$)@),S(:#-JZb(K*.):h7}Ff}9;CZ|');
 
 -- Inserir um novo cliente
 INSERT INTO tb_cliente (nm_cliente, ds_telefone, ds_cpf, ds_email, ds_senha)
-VALUES ('João da Silva', '(11) 9876-5432', '123.456.789-01', 'joao@email.com', 'senha123');
+VALUES ('João da Silva', '(11) 9876-5432', '133.456.789-01', 'joao@email.com', 'senha123');
 
                      SELECT * FROM tb_admin;
 			SELECT * FROM tb_produto_imagem;
@@ -43,9 +43,9 @@ SET nm_titulo = 'O Kara',
 WHERE id_jogos = 1;
 
 
-SET foreign_key_checks = 0; 
-DELETE FROM tb_produto WHERE id_produto = 1;
-SET foreign_key_checks = 1;
+-- SET foreign_key_checks = 0; 
+-- DELETE FROM tb_produto WHERE id_produto = 1;
+-- SET foreign_key_checks = 1;
 
 -- ou um desses dois para deletar 
 
@@ -86,8 +86,28 @@ WHERE id_admin = 1;
 
 SELECT * FROM tb_produto;
 
-INSERT INTO tb_produto (nm_produto, vl_preco, vl_preco_promocional, bt_destaque, bt_promocao, bt_disponivel, qtd_estoque, ds_detalhes)
-VALUES ('Ninja Coder', 249.99, 139.99, 1, 1, 1, 100, 'Em "Code Ninja", você é um habilidoso ninja da programação em uma jornada para se tornar o mestre do código. Enfrente desafios digitais, resolva quebra-cabeças, e proteja o código-fonte enquanto descobre uma conspiração que ameaça o mundo virtual e real. Torne-se um lendário "Code Ninja" dominando linguagens de programação e estratégias únicas.');
+-- Inserir um produto fictício na tabela tb_produto
+INSERT INTO tb_produto (
+    id_categoria, id_admin, nm_produto, ds_descricao, vl_preco, vl_preco_promocional,
+    bt_destaque, bt_promocao, bt_disponivel, qtd_estoque, ds_classificacao,
+    dt_lancamento, ds_tamanho, ds_empresa_publi, ds_desenvolvedor
+) VALUES (
+    1, 
+    1,
+    'Nome do Produto',
+    'Descrição do produto',
+    29.99,
+    19.99, 
+    1, 
+    1, 
+    0, 
+    100, 
+    'Classificação do Produto',
+    '2023-10-26', 
+    '15GB', 
+    'Nome da Empresa',
+    'Nome do Desenvolvedor'
+);
 
 SELECT * FROM tb_categoria;
 
@@ -101,9 +121,67 @@ VALUES ('Ação'),
        
 SELECT * FROM tb_categoria_produto;
 
-SELECT * FROM tb_produto_imagem;
+SELECT * FROM tb_produto_video ;
 
 INSERT INTO tb_categoria_produto (id_categoria, id_produto, data_associacao)
-VALUES (1, 1, CURDATE());
+VALUES (1, 2, CURDATE());
 
-SELECT * FROM tb_produto_video;
+SELECT
+    p.id_produto,
+    p.nm_produto,
+    p.ds_descricao,
+    p.vl_preco,
+    p.vl_preco_promocional,
+    p.bt_destaque,
+    p.bt_promocao,
+    p.bt_disponivel,
+    p.qtd_estoque,
+    p.ds_classificacao,
+    p.dt_lancamento,
+    p.ds_tamanho,
+    p.ds_empresa_publi,
+    p.ds_desenvolvedor,
+    c.nm_categoria,
+    pi.img_produto,
+    pv.url_video
+FROM tb_produto p
+LEFT JOIN tb_categoria c ON p.id_categoria = c.id_categoria
+LEFT JOIN tb_produto_imagem pi ON p.id_produto = pi.id_produto
+LEFT JOIN tb_produto_video pv ON p.id_produto = pv.id_produto;
+
+
+SELECT 
+    c.nm_categoria, 
+    p.id_admin, 
+    p.nm_produto, 
+    p.ds_descricao, 
+    p.vl_preco, 
+    p.vl_preco_promocional, 
+    p.bt_destaque, 
+    p.bt_promocao, 
+    p.bt_disponivel, 
+    p.qtd_estoque, 
+    p.ds_classificacao, 
+    p.dt_lancamento, 
+    p.ds_tamanho, 
+    p.ds_empresa_publi, 
+    p.ds_desenvolvedor,
+    pi.img_produto,
+    pv.url_video
+FROM tb_categoria c
+INNER JOIN tb_produto p ON c.id_categoria = p.id_categoria
+LEFT JOIN tb_produto_imagem pi ON p.id_produto = pi.id_produto
+LEFT JOIN tb_produto_video pv ON p.id_produto = pv.id_produto
+WHERE p.id_produto = 2;
+
+
+
+INSERT INTO tb_produto_img_vd (id_produto, img_produto)
+VALUES (2, 'caminho_da_imagem1.jpg');
+
+INSERT INTO tb_produto_video (id_produto, url_video)
+VALUES (2, 'https://www.exemplo.com/video1.mp4');
+
+UPDATE tb_admin
+    SET ds_senha = '321'
+    WHERE id_admin = 1;
