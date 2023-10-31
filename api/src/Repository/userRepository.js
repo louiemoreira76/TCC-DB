@@ -49,3 +49,17 @@ export async function MudarSenhaAdm (NewSenha, id){
 
     return resposta.affectedRows
 }
+
+export async function MudarSenhaUser(New, id){
+    const comando = `
+    UPDATE tb_cliente
+    SET  nm_cliente = ?,
+	ds_email = ?,
+	ds_senha = ?,
+	ds_telefone = ?
+WHERE id_cliente = ?;`
+
+const [resposta] = await conx.query(comando[New.nome, New.email, New.senha, New.telefone, id]); 
+
+return resposta.affectedRows
+}
