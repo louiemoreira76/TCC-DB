@@ -42,7 +42,7 @@ server.post('/produto', async (req, resp) => {
         }
 
         
-        const RepositoryInseridoP = await inserirProduto(produtoParaInserir);
+        await inserirProduto(produtoParaInserir);
 
          resp.status(200).send(produtoInserido);
 
@@ -76,7 +76,7 @@ server.put('/produto/:id', async (req, resp) => {
         }
 
         // Verificar se pelo menos um dos campos a serem atualizados foi fornecido no corpo da solicitação
-        if (!produto.nome && !produto.preco && !produto.precoPro && produto.destaque === undefined && produto.promocao === undefined && produto.disponivel === undefined && !produto.qtd && !produto.descricao && !produto.categoria && !produto.admin) {
+        if (!produto.nome && !produto.preco && !produto.precoPro && produto.destaque === undefined && produto.promocao === undefined && produto.disponivel === undefined && !produto.qtd && !produto.descricao && !produto.classificacao && !produto.lancamento && !produto.tamanho && !produto.empresa && !produto.desenvolvedor && !produto.categoria && !produto.admin) {
             throw new Error('Nenhum campo a ser atualizado foi fornecido.');
         }
 
