@@ -44,7 +44,7 @@ server.post('/produto', async (req, resp) => {
         
         await inserirProduto(produtoParaInserir);
 
-         resp.status(200).send(produtoInserido);
+         resp.status(200).send(produtoParaInserir);
 
     } catch (err) {
         resp.status(400).send({
@@ -142,7 +142,7 @@ server.put('/produto/:id/imagens', upload.array('imagens', 5), async (req, resp)
     }
 })
 
-server.put('/produto/video/url', async(req, resp) => {
+server.post('/produto/video/url', async(req, resp) => {
     try{
         const video = req.body
 
