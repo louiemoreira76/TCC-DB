@@ -11,14 +11,13 @@ CREATE TABLE tb_admin (
 );
 
 /*Parte do cliente*/
-
 CREATE TABLE tb_cliente (
 	id_cliente int primary key auto_increment,
 	nm_cliente varchar(200),
-	ds_telefone varchar(25),
-	ds_cpf varchar(15) UNIQUE,
 	ds_email varchar(200),
-	ds_senha varchar(200)
+	ds_senha varchar(200),
+	ds_telefone varchar(25),
+	ds_cpf varchar(15) UNIQUE
 );
 
 CREATE TABLE tb_endereco (
@@ -68,7 +67,6 @@ CREATE TABLE tb_produto (
     FOREIGN KEY (id_admin) REFERENCES tb_admin (id_admin)
 );
 
-
 CREATE TABLE tb_categoria_produto (
     id_tb_categoria_produto INT PRIMARY KEY AUTO_INCREMENT,
     id_categoria INT,
@@ -112,8 +110,6 @@ CREATE TABLE tb_cartao (
     foreign key (id_cliente) references tb_cliente(id_cliente)  ON DELETE CASCADE
 );
 
-
-
 CREATE TABLE tb_conquista (
     id_conquistas INT PRIMARY KEY AUTO_INCREMENT,
     id_produto INT,
@@ -121,5 +117,25 @@ CREATE TABLE tb_conquista (
     ds_descricao VARCHAR(255),
     nr_pontos DECIMAL(15,2),
     img_conquista VARCHAR(255),
+    FOREIGN KEY (id_produto) REFERENCES tb_produto (id_produto)
+);
+
+CREATE TABLE tb_favoritos (
+id_favoritos INT PRIMARY KEY AUTO_INCREMENT,
+id_cliente	INT,
+id_produto	INT,
+data_adicao DATETIME,
+FOREIGN KEY (id_cliente) REFERENCES tb_cliente (id_cliente),
+FOREIGN KEY (id_produto) REFERENCES tb_produto (id_produto)
+);
+
+CREATE TABLE tb_comentarios_avaliacoes (
+    id_comentario_avaliacao INT PRIMARY KEY AUTO_INCREMENT,
+    id_cliente INT,
+    id_produto INT,
+    comentario TEXT,
+    avaliacao DECIMAL(2,1),  -- Nota Maxima 5
+    data_comentario DATETIME,
+    FOREIGN KEY (id_cliente) REFERENCES tb_cliente (id_cliente),
     FOREIGN KEY (id_produto) REFERENCES tb_produto (id_produto)
 );

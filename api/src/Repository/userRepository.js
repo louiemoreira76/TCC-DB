@@ -39,27 +39,44 @@ export async function Novocliente (cliente){
     return cliente
 }
 
-export async function MudarSenhaAdm (NewSenha, id){
+export async function MudarSenhaAdm(NewSenha, id) {
     const comando = `
     UPDATE tb_admin
     SET ds_senha = ?
     WHERE id_admin = ?;`
 
-    const [resposta] = await conx.query(comando, [NewSenha.senha, id]);
+    const [resposta] = await conx.query(comando, [NewSenha, id]);
 
-    return resposta.affectedRows
+    return resposta.affectedRows;
 }
 
-export async function MudarSenhaUser(New, id){
+export async function MudarSenhaUser(New, id) {
     const comando = `
     UPDATE tb_cliente
-    SET  nm_cliente = ?,
-	ds_email = ?,
-	ds_senha = ?,
-	ds_telefone = ?
-WHERE id_cliente = ?;`
+    SET nm_cliente = ?,
+        ds_email = ?,
+        ds_senha = ?,
+        ds_telefone = ?
+    WHERE id_cliente = ?;`
 
-const [resposta] = await conx.query(comando[New.nome, New.email, New.senha, New.telefone, id]); 
+    if (!New) {
+        throw new Error('Os dados do usuário não foram fornecidos.');
+    }
 
-return resposta.affectedRows
+    const { nome, email, senha, telefone } = {
+        nome: New.nome,
+        email: New.email ? New.email.toString() : undefined,
+        senha: New.senha,
+        telefone: New.telefone,
+    };
+    //{"erro": "O campo de e-mail deve ser uma string válida."}
+
+    if (email === undefined) {
+        throw new Error('O campo de e-mail deve ser uma string válida.');
+    }
+
+    const [resposta] = await conx.query(comando, [nome, email, senha, telefone, id]);
+
+    return resposta.affectedRows;
 }
+

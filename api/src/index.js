@@ -18,4 +18,4 @@ server.use('/tools/image', express.static('tools/image'));
 server.use(userController);
 server.use(jogoController);
 
-server.listen(process.env.PORT, () => console.log(`API Game Sync conectado! ${process.env.PORT}`));
+server.listen(process.env.PORT, () => console.log(`API Game Sync 🎮 conectado! ${process.env.PORT}`));

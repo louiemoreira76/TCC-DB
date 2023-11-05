@@ -1,5 +1,5 @@
-import { inserirProduto, todosJogos, alterarProduto, deletarProduto, AlterarImagem, TBcategoriaProduto, 
-        BuscarJogoNM, BuscarJogoID, InserirVideo } from "../Repository/jogoRepository.js"
+import { inserirProduto, todosJogos, alterarProduto, deletarProduto, InserirImagem, TBcategoriaProduto, 
+        BuscarJogoNM, BuscarJogoID, InserirVideo, MudarImagem, MudarVideo, MudarCproduto, MudarCcategoriap } from "../Repository/jogoRepository.js"
 
 import { Router } from 'express';
 const server = Router();
@@ -65,36 +65,6 @@ server.get('/produtos', async (req, resp) => {
     }
 })
 
-server.put('/produto/:id', async (req, resp) => {
-    try {
-        const { id } = req.params;
-        const produto = req.body;
-
-        // Verificar se o ID do produto é um número válido
-        if (isNaN(id)) {
-            throw new Error('ID do produto não é válido.');
-        }
-
-        // Verificar se pelo menos um dos campos a serem atualizados foi fornecido no corpo da solicitação
-        if (!produto.nome && !produto.preco && !produto.precoPro && produto.destaque === undefined && produto.promocao === undefined && produto.disponivel === undefined && !produto.qtd && !produto.descricao && !produto.classificacao && !produto.lancamento && !produto.tamanho && !produto.empresa && !produto.desenvolvedor && !produto.categoria && !produto.admin) {
-            throw new Error('Nenhum campo a ser atualizado foi fornecido.');
-        }
-
-        const resposta = await alterarProduto(id, produto);
-
-        if (resposta !== 1) {
-            throw new Error('Produto não pode ser alterado.');
-        } else {
-            resp.status(204).send();
-        }
-    } catch (err) {
-        resp.status(400).send({
-            erro: err.message
-        });
-    }
-});
-
-
 server.delete('/produto/:id', async (req, resp) => {
     try{
         
@@ -126,7 +96,7 @@ server.put('/produto/:id/imagens', upload.array('imagens', 5), async (req, resp)
         console.log({imagem: imagens[0], id: id});
 
         // Lógica para salvar as imagens no banco de dados ou armazenamento
-        const resposta = await AlterarImagem(imagens[0], id);
+        const resposta = await InserirImagem(imagens[0], id);
         console.log({resposta});
 
         if(resposta != 1)
@@ -186,13 +156,11 @@ server.post('/produto/categoria', async(req, resp) => {
     }
 })
 
-server.get('/produto/:nome', async (req, resp) => {
+server.get('/produto/buscar', async (req, resp) => {
     try {
-        const { nome } = req.params; // Usar req.query para obter os parâmetros da URL e ai tá errado
-
+        const { nome } = req.query; 
         if (!nome) {
-            resp.status(400).send({ erro: 'O parâmetro "nome" é obrigatório.' });
-            return;
+            throw new Error('O parâmetro "nome" é obrigatório!');
         }
 
         const resposta = await BuscarJogoNM(nome);
@@ -208,6 +176,7 @@ server.get('/produto/:nome', async (req, resp) => {
         });
     }
 });
+
 
 server.get('/produto/busca/:id', async (req, resp) => {
     try {
@@ -232,6 +201,130 @@ server.get('/produto/busca/:id', async (req, resp) => {
     }
 });
 
+server.put('/produto/:id', async (req, resp) => {
+    try {
+        const { id } = req.params;
+        const produto = req.body;
 
+        // Verificar se o ID do produto é um número válido
+        if (isNaN(id)) {
+            throw new Error('ID do produto não é válido.');
+        }
+
+        // Verificar se pelo menos um dos campos a serem atualizados foi fornecido no corpo da solicitação
+        if (!produto.nome && !produto.preco && !produto.precoPro && produto.destaque === undefined && produto.promocao === undefined && produto.disponivel === undefined && !produto.qtd && !produto.descricao && !produto.classificacao && !produto.lancamento && !produto.tamanho && !produto.empresa && !produto.desenvolvedor && !produto.categoria && !produto.admin) {
+            throw new Error('Nenhum campo a ser atualizado foi fornecido.');
+        }
+
+        const resposta = await alterarProduto(id, produto);
+
+        if (resposta !== 1) {
+            throw new Error('Produto não pode ser alterado.');
+        } else {
+            resp.status(204).send();
+        }
+    } catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        });
+    }
+});
+
+server.put('/produto/:id/url', async (req, resp) => {
+    try {
+        const { id } = req.params;
+        const { url } = req.body;
+
+        if (!url) {
+            throw new Error('A URL do vídeo é necessária para a alteração.');
+        }
+
+        const change = await MudarVideo(id, url);
+
+        if (change === 1) {
+            resp.status(204).send();
+        } else {
+            throw new Error('Produto não encontrado ou a URL não pode ser atualizada.')
+        }
+    } catch (err) {
+        resp.status(400).send({ erro: err.message });
+    }
+});
+
+server.put('/produto/:id/P', async (req, resp) => {
+    try{
+        const {id} = req.params;
+        const {idcategoria} = req.body;
+
+        if(!idcategoria){
+            throw new Error('Inserir a categoria é necessario para a alteração!')
+        }
+
+        const change = await MudarCproduto(id, idcategoria)
+
+        if (change === 1) {
+            resp.status(204).send();
+        } else {
+            throw new Error('Produto não encontrado ou a categoria não pode ser atualizada')
+        }
+    }
+    catch(err){
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
+server.put('/produto/:id/CP', async (req, resp) => {
+    try {
+        const { id } = req.params;
+        const { idcategoria } = req.body;
+
+        if (!idcategoria) {
+            throw new Error('Inserir a categoria é necessário para a alteração!');
+        }
+
+        const change = await MudarCcategoriap(idcategoria, id);  
+
+        if (change === 1) {
+            resp.status(204).send();
+        } else {
+            throw new Error('Produto não encontrado ou a categoria não pode ser atualizada');
+        }
+    } catch (err) {
+        resp.status(400).send({
+            erro: err.message
+        });
+    }
+});
+
+
+server.put('/mudar/:id/imagens', upload.array('imagens', 5), async (req, resp) => {
+    try{
+        const {id} = req.params;
+        const imagens = req.files.map(file => file.path); // Array de arquivos de imagem, por isso files
+
+        if (!imagens || imagens.length === 0){
+            throw new Error('Precisa escolher pelo menos uma imagem!')
+        }
+
+        console.log({imagem: imagens[0], id: id});
+
+        // Lógica para salvar as imagens no banco de dados ou armazenamento
+        const resposta = await MudarImagem(id, imagens[0]);
+        console.log({resposta});
+
+        if(resposta != 1)
+            throw new Error('A imagem não pode ser salva!')
+
+        resp.status(204).send();
+    }
+    catch(err){
+        console.log(err);
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
 
 export default server;

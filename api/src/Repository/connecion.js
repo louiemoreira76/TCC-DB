@@ -16,5 +16,5 @@ const conx = await mysql.createConnection({
         }
 })
 
-console.log('DB conectado!:)')
+console.log('DB conectado! 🛢️')
 export { conx };

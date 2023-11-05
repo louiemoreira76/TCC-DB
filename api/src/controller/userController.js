@@ -8,12 +8,12 @@ import passwordValidator from 'password-validator';//import
 var schema = new passwordValidator(); // cria uma instância de um objeto chamado schema, Esse objeto schema é usado para definir e aplicar regras de validação personalizadas a senhas.
 
 schema
-    .is().min(8, 'kkkkk') // Mínimo de 10 caracteres
-    .is().max(300,'') 
-    .has().uppercase(1, '') // Pelo menos uma letra maiúscula
-    .has().digits(1) // Pelo menos um dígito numérico
-    .has().not().spaces(true, '') //Sem espaços            
-    .has().symbols(1, ''); // Pelo menos um caractere especial     
+    .is().min(10, 'Para a mudar a senha tem que ter no mínimo 10 caracteres!') // Mínimo de 10 caracteres
+    .is().max(300,'Limite de 300 caracteres') 
+    .has().uppercase(1, 'Para a mudar a senha tem que ter no mínimo 1 letra maiúscula!') // Pelo menos uma letra maiúscula
+    .has().digits(1, 'Para a mudar a senha tem que ter no mínimo 1 número!') // Pelo menos um dígito numérico
+    .has().not().spaces(true, 'Não pode haver espaços na senha!') //Sem espaços            
+    .has().symbols(1, 'Para a mudar a senha tem que ter no mínimo 1 caractere especial'); // Pelo menos um caractere especial     
     //console.log(schema.validate(''));
     //console.log(schema.validate('K@1BHBHBH', { details: true }));
    // console.log(schema.validate('', { list: true }));
@@ -71,29 +71,29 @@ server.post('/usuario/cadastrar', async (req, resp) => {
     }
 })
 
-server.put('/usuario/New/:id' , async (req, resp) => {
-    try{
-        const { id } = req.params
-        let {nome, email, senha, telefone} = req.body 
+server.put('/usuario/New/:id', async (req, resp) => {
+    try {
+        const { id } = req.params;
+        const { nome, email, senha, telefone } = req.body;
 
-        if(!id)
-            throw new Error('O usuario não está logado!')
-
-        const resposta = await MudarSenhaUser(nome, email, senha, telefone ,id)
-
-        if(!resposta){
-            resp.status(400).send({ erro: 'A alteração dos campos não foi executada!'})
+        if (!id) {
+            throw new Error('O usuário não está logado!');
         }
 
-        else
+        const resposta = await MudarSenhaUser({ nome, email, senha, telefone }, id);
+
+        if (!resposta) {
+            resp.status(400).send({ erro: 'A alteração dos campos não foi executada!' });
+        } else {
             resp.sendStatus(204);
-    }
-    catch(err){
+        }
+    } catch (err) {
         resp.status(400).send({
             erro: err.message
-        })
+        });
     }
-})
+});
+
 
 server.put('/admin/NewSenha/:id', async (req, resp) => {
     try{
@@ -108,7 +108,7 @@ server.put('/admin/NewSenha/:id', async (req, resp) => {
             throw new Error('Senha obrigatória')
         }
 
-        let errosSenha = schema.validate(novaSenha.senha, { details: true })
+        let errosSenha = schema.validate(novaSenha.senha, { list: true })
 
         if (errosSenha.length != 0) { //!!!!!!!!!!!!!!!!!!!!!!
 
