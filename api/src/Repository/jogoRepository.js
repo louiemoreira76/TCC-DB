@@ -241,3 +241,9 @@ const [linhas] = await conx.query(comando, [categoria, id])
 return  linhas.affectedRows 
 }
 
+export async function todosGames(){
+const comando = `SELECT * FROM tb_jogos;`
+
+const [linhas] = await conx.query(comando)
+return linhas
+}

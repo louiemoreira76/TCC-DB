@@ -20,17 +20,9 @@ CREATE TABLE tb_cliente (
 	ds_cpf varchar(15) UNIQUE
 );
 
-CREATE TABLE tb_endereco (
-    id_endereco INT PRIMARY KEY AUTO_INCREMENT,
-    ds_cep VARCHAR(10),
-    ds_endereco VARCHAR(255),
-    nr_endereco VARCHAR(10),
-    ds_cidade VARCHAR(255)
-);
-
-	CREATE TABLE tb_categoria (
-		id_categoria INT PRIMARY KEY AUTO_INCREMENT,
-		nm_categoria VARCHAR(255)
+CREATE TABLE tb_categoria (
+	id_categoria INT PRIMARY KEY AUTO_INCREMENT,
+	nm_categoria VARCHAR(255)
 	);
 
 CREATE TABLE tb_produto (

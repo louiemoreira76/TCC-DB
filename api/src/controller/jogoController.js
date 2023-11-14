@@ -1,4 +1,4 @@
-import { inserirProduto, todosJogos, alterarProduto, deletarProduto, InserirImagem, TBcategoriaProduto, 
+import { inserirProduto, todosJogos, alterarProduto, deletarProduto, InserirImagem, TBcategoriaProduto, todosGames,
         BuscarJogoNM, BuscarJogoID, InserirVideo, MudarImagem, MudarVideo, MudarCproduto, MudarCcategoriap } from "../Repository/jogoRepository.js"
 
 import { Router } from 'express';
@@ -59,6 +59,18 @@ server.get('/produtos', async (req, resp) => {
         resp.send(resposta)
     }
     catch (err){
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
+server.get('/games', async (req, resp) => {
+    try{
+        const resposta = await todosGames();
+        resp.send(resposta)
+    }
+    catch(err){
         resp.status(400).send({
             erro: err.message
         })

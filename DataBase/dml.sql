@@ -11,10 +11,10 @@ VALUES
 -- Inserir um novo cliente
 INSERT INTO tb_cliente (nm_cliente, ds_telefone, ds_cpf, ds_email, ds_senha)
 VALUES 
-    ('Luis Felipi', '(01) 9876-5432', '133.456.789-01', 'luis@email.com', 'senha123'),
-    ('Davi Matinho', '(12) 8765-4321', '144.567.890-12', 'davi@email.com', 'davi123'),
-    ('Juan Oliveira', '(13) 7654-3210', '155.678.901-23', 'juan@email.com', 'juan123'),
-    ('Felipe Pereira', '(14) 6543-2109', '166.789.012-34', 'felipe@email.com', 'felipe123');
+    ('Luis Felipi', '(01) 9876-5432', '133.456.789-11', 'luis@email.com', 'senha123'),
+    ('Davi Matinho', '(12) 8765-4321', '144.567.890-15', 'davi@email.com', 'davi123'),
+    ('Juan Oliveira', '(13) 7654-3210', '155.678.901-21', 'juan@email.com', 'juan123'),
+    ('Felipe Pereira', '(14) 6543-2109', '166.782.012-34', 'felipe@email.com', 'felipe123');
 
 INSERT INTO tb_categoria (nm_categoria)
 VALUES ('Ação'),
@@ -94,31 +94,7 @@ WHERE id_jogos = 1;
 DELETE FROM tb_produto
 WHERE id_produto = 4;
 
--- Consultar todos jogos
-SELECT id_jogos AS id,
-       nm_titulo AS nome,
-       nr_tamanho AS tamanho,
-       dt_lancamento AS lancamento,
-       bt_disponivel AS disponivel
-FROM tb_jogo;
-
--- Consultar todos jogos por nome
-SELECT id_jogos AS id,
-       nm_titulo AS nome,
-       nr_tamanho AS tamanho,
-       dt_lancamento AS lancamento,
-       bt_disponivel AS disponivel
-FROM tb_jogo
-WHERE nm_titulo LIKE '%a%';
-
--- Consultar jogo por ID
-SELECT id_jogos AS id,
-       nm_titulo AS nome,
-       nr_tamanho AS tamanho,
-       dt_lancamento AS lancamento,
-       bt_disponivel AS disponivel
-FROM tb_jogo
-WHERE id_jogos = 1;
+DELETE FROM tb_categoria WHERE id_categoria BETWEEN 28 AND 81;
 
 UPDATE tb_admin
 SET ds_email = 'admin@admin.com.br',
