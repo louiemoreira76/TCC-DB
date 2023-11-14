@@ -240,3 +240,4 @@ WHERE id_produto = ?;`
 const [linhas] = await conx.query(comando, [categoria, id])
 return  linhas.affectedRows 
 }
+

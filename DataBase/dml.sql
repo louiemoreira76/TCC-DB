@@ -52,7 +52,8 @@ SELECT * FROM tb_produto;
 SELECT * FROM tb_categoria;
 SELECT * FROM tb_categoria_produto;
 SELECT * FROM tb_produto_video ;
-            
+SELECT * FROM tb_jogos;
+
 -- Efetuar login
 SELECT id_admin AS id,
        ds_email AS email
@@ -153,6 +154,9 @@ where id_admin = 1;
 
 INSERT INTO tb_categoria_produto (id_categoria, id_produto, data_associacao)
 VALUES (1, 2, CURDATE());
+
+INSERT INTO tb_jogos (nm_jogo, ds_descricao,img_jogo , url_jogo)
+VALUES ('Super Mario Bros', 'Super Mario Bros. é um jogo de plataforma desenvolvido pela Nintendo em 1985. O jogo foi projetado por Shigeru Miyamoto e Takashi Tezuka, e foi descrito como “um grande ponto culminante” dos três anos de experiência em programação e mecânica de jogos realizada pela equipe principal de desenvolvimento 1. O objetivo do jogo é guiar o personagem principal, Mario, através do Reino dos Cogumelos para resgatar a Princesa Toadstool das garras do vilão Bowser. O jogo é dividido em oito mundos, cada um com quatro fases. O jogador deve superar obstáculos, coletar moedas e power-ups, e derrotar inimigos para progredir através do jogo. O jogo é conhecido por sua jogabilidade desafiadora e mecânica de salto precisa, e é considerado um dos jogos mais influentes e bem-sucedidos de todos os tempos', 'tools\image\mario','https://www.playroms.net/nes-roms/super-mario-bros/');
 
 SELECT
     p.id_produto,

@@ -28,19 +28,6 @@ CREATE TABLE tb_endereco (
     ds_cidade VARCHAR(255)
 );
 
-CREATE TABLE tb_pedido (
-    id_pedido INT PRIMARY KEY AUTO_INCREMENT,
-    id_cliente INT,
-    id_endereco_entrega INT,
-    ds_nota_fiscal VARCHAR(255),
-    tp_forma_pagamento VARCHAR(50),
-    qtd_parcelas INT,
-    dt_pedido DATETIME,
-    ds_situacao VARCHAR(50),
-    FOREIGN KEY (id_cliente) REFERENCES tb_cliente (id_cliente),
-    FOREIGN KEY (id_endereco_entrega) REFERENCES tb_endereco (id_endereco)
-);
-
 	CREATE TABLE tb_categoria (
 		id_categoria INT PRIMARY KEY AUTO_INCREMENT,
 		nm_categoria VARCHAR(255)
@@ -90,16 +77,6 @@ CREATE TABLE tb_produto_video (
     FOREIGN KEY (id_produto) REFERENCES tb_produto (id_produto) ON DELETE CASCADE
 );
 
-CREATE TABLE tb_pedido_item (
-    id_pedido_item INT PRIMARY KEY AUTO_INCREMENT,
-    id_pedido INT,
-    id_produto INT,
-    qtd_items INT,
-    vl_preco DECIMAL(15,2),
-    FOREIGN KEY (id_pedido) REFERENCES tb_pedido (id_pedido),
-    FOREIGN KEY (id_produto) REFERENCES tb_produto (id_produto)
-);
-
 CREATE TABLE tb_cartao (
     id_cartao int primary key auto_increment,
     id_cliente int,
@@ -138,4 +115,12 @@ CREATE TABLE tb_comentarios_avaliacoes (
     data_comentario DATETIME,
     FOREIGN KEY (id_cliente) REFERENCES tb_cliente (id_cliente),
     FOREIGN KEY (id_produto) REFERENCES tb_produto (id_produto)
+);
+
+CREATE TABLE tb_jogos(
+id_jogos INT PRIMARY KEY AUTO_INCREMENT,
+nm_jogo VARCHAR(100),
+ds_descricao TEXT,
+img_jogo	VARCHAR(255),
+url_jogo	VARCHAR(255) 
 );
