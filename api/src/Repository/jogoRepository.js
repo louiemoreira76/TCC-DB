@@ -303,3 +303,10 @@ export async function AdicionarAvaliacao(idP, avaliacao){
   const [resposta] = await conx.query(comando, parametros);
   return resposta.affectedRows;
 }
+
+export async function SelecioneComentario(id){
+  const comando = `SELECT * FROM tb_comentarios_avaliacoes WHERE id_produto = ?;`
+
+  const [linhas] = await conx.query(comando, [id])
+  return linhas
+}

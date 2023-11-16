@@ -1,7 +1,6 @@
 import { inserirProduto, todosJogos, alterarProduto, deletarProduto, InserirImagem, TBcategoriaProduto, todosGames,
-        BuscarJogoNM, BuscarJogoID, InserirVideo, MudarImagem, MudarVideo, MudarCproduto, MudarCcategoriap, 
-        InserirFavorito, TodosFavoritados, ExcluirFavorito, FiltroCategoria, AdicionarAvaliacao, BuscarGamesID} 
-        from "../Repository/jogoRepository.js"
+        BuscarJogoNM, BuscarJogoID, InserirVideo, MudarImagem, MudarVideo, MudarCproduto, MudarCcategoriap,SelecioneComentario, 
+        InserirFavorito, TodosFavoritados, ExcluirFavorito, FiltroCategoria, AdicionarAvaliacao, BuscarGamesID} from "../Repository/jogoRepository.js"
 
 import { Router } from 'express';
 const server = Router();
@@ -88,7 +87,7 @@ server.get(`/games/:id`, async(req, resp) => {
             return;
         }
 
-        const resposta = await BuscarJogoID(id);
+        const resposta = await BuscarGamesID(id);
 
         if (!resposta) {
             resp.status(404).send([]);
@@ -486,5 +485,26 @@ server.post('/avaliacao/:id', async(req, resp) => {
         })
     }
 })
+
+server.get(`/comentario/:id`, async(req, resp) => {
+    try {
+        const { id } = req.params;
+
+        if (isNaN(id)) {
+            throw new Error('ID do produto não é válido.');
+        }
+
+        const resposta = await SelecioneComentario(id);
+        console.log('Resposta da SelecioneComentario:', resposta); // Adicione este log
+
+        resp.status(200).send(resposta);
+    } catch (err) {
+        console.error('Erro na rota /comentario/:id:', err.message);
+        resp.status(400).send({
+            erro: err.message
+        });
+    }
+});
+
 
 export default server;
