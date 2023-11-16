@@ -247,3 +247,59 @@ const comando = `SELECT * FROM tb_jogos;`
 const [linhas] = await conx.query(comando)
 return linhas
 }
+
+export async function BuscarGamesID(id){
+  const comando = `SELECT * FROM tb_jogos WHERE id_jogos = ?;`
+
+  const [linhas] = await conx.query(comando, [id])
+  return linhas
+}
+
+export async function InserirFavorito(favorito){
+  const comando = `INSERT INTO tb_favoritos(id_cliente, id_produto, data_adicao)
+  VALUES (?, ?, CURDATE());`;
+
+  const [resposta] = await conx.query(comando, [favorito.cliente, favorito.produto])
+  
+  return resposta.affectedRows
+}
+
+export async function TodosFavoritados(id){
+  const comando = `
+  SELECT tb_favoritos.data_adicao, tb_produto.*, tb_produto_imagem.img_produto
+  FROM tb_favoritos
+  JOIN tb_produto ON tb_favoritos.id_produto = tb_produto.id_produto
+  LEFT JOIN tb_produto_imagem ON tb_favoritos.id_produto = tb_produto_imagem.id_produto
+  WHERE tb_favoritos.id_cliente = ?;`
+
+  const [linhas] = await conx.query(comando, [id])
+  return linhas
+}
+
+export async function ExcluirFavorito(id){
+  const comando = `DELETE FROM tb_favoritos
+  WHERE id_favoritos = ?;`
+
+  const [resposta] = await conx.query(comando, [id])
+  return resposta.affectedRows
+}
+
+export async function FiltroCategoria(id){
+  const comando = `
+  SELECT * FROM tb_produto
+  WHERE id_categoria = ?;`;
+
+  const [linhas] = await conx.query(comando, [id])
+  return linhas
+}
+
+export async function AdicionarAvaliacao(idP, avaliacao){
+  const comando = `
+  INSERT INTO tb_comentarios_avaliacoes (id_cliente, comentario, avaliacao, data_comentario, id_produto)
+  VALUES (?, ?, ?, CURDATE(), ?);`
+
+  const parametros = [avaliacao.id_cliente, avaliacao.comentario, avaliacao.avaliacao, idP];
+
+  const [resposta] = await conx.query(comando, parametros);
+  return resposta.affectedRows;
+}

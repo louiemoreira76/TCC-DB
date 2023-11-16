@@ -1,5 +1,7 @@
 import { inserirProduto, todosJogos, alterarProduto, deletarProduto, InserirImagem, TBcategoriaProduto, todosGames,
-        BuscarJogoNM, BuscarJogoID, InserirVideo, MudarImagem, MudarVideo, MudarCproduto, MudarCcategoriap } from "../Repository/jogoRepository.js"
+        BuscarJogoNM, BuscarJogoID, InserirVideo, MudarImagem, MudarVideo, MudarCproduto, MudarCcategoriap, 
+        InserirFavorito, TodosFavoritados, ExcluirFavorito, FiltroCategoria, AdicionarAvaliacao, BuscarGamesID} 
+        from "../Repository/jogoRepository.js"
 
 import { Router } from 'express';
 const server = Router();
@@ -77,6 +79,29 @@ server.get('/games', async (req, resp) => {
     }
 })
 
+server.get(`/games/:id`, async(req, resp) => {
+    try {
+        const { id } = req.params; // parametro na url
+
+        if (!id) {
+            resp.status(400).send({ erro: 'O parâmetro "id" é obrigatório.' });
+            return;
+        }
+
+        const resposta = await BuscarJogoID(id);
+
+        if (!resposta) {
+            resp.status(404).send([]);
+        } else {
+            resp.send(resposta);
+        }
+    } catch (err) {
+        resp.status(500).send({
+            erro: err.message
+        });
+    }
+})
+
 server.delete('/produto/:id', async (req, resp) => {
     try{
         
@@ -124,7 +149,7 @@ server.put('/produto/:id/imagens', upload.array('imagens', 5), async (req, resp)
     }
 })
 
-server.post('/produto/video/url', async(req, resp) => {
+server.post('/produto/video/url', async(req, resp) => {           //////////////////////////////
     try{
         const video = req.body
 
@@ -333,6 +358,129 @@ server.put('/mudar/:id/imagens', upload.array('imagens', 5), async (req, resp) =
     }
     catch(err){
         console.log(err);
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
+server.post('/favoritar', async(req, resp) => {
+    try{
+        const favoritar = req.body
+
+        if (!favoritar.produto)
+        throw new Error ('O id do produto é obrigatorio');
+
+        if (!favoritar.cliente)
+        throw new Error ('O id do cliente é obrigatorio');
+
+        const Favoritacao = await InserirFavorito(favoritar)
+
+        resp.status(200).send({ Favoritacao }); //status HTTP 200 junto com o corpo da resposta no formato JSON.
+    }
+    catch(err){
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
+server.get('/favoritos/:id', async(req, resp) => {
+    try{
+        const { id } = req.params;
+
+        if (!id) {
+            resp.status(400).send({ erro: 'O parâmetro "id" é obrigatório.' });
+            return;
+        }
+
+        const BuscarFavoritos = await TodosFavoritados(id);
+
+        if (!BuscarFavoritos) {
+            resp.status(404).send([]);
+        } else {
+            resp.send(BuscarFavoritos);
+        }
+    }
+    catch (err) {
+        resp.status(500).send({
+            erro: err.message
+        });
+    }
+})
+
+server.delete('/favorito/:id', async(req, resp) => {
+    try{
+        const { id } = req.params;
+
+        const resposta = await ExcluirFavorito(id);
+
+        if(resposta != 1)
+        throw new Error('Produto favoritado não pode ser removido!');
+
+        resp.status(204).send();
+    }
+    catch(err){
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
+server.get('/categorias/:id', async(req, resp) => {
+    try{
+        const { id } = req.params;
+
+        if (!id) {
+            resp.status(400).send({ erro: 'O parâmetro "id" é obrigatório.' });
+            return;
+        }
+
+        const resposta = await FiltroCategoria(id);
+
+        if (!resposta) {
+            resp.status(404).send([]);
+        } else {
+            resp.send(resposta);
+        }
+    }
+    catch(err){ 
+    resp.status(400).send({
+        erro: err.message
+    })
+    }
+})
+
+server.post('/avaliacao/:id', async(req, resp) => {
+    try{
+        const { id } = req.params
+        const avaliacao = req.body;
+
+        if (isNaN(id)) {
+            throw new Error('ID do produto não é válido.');
+        }
+
+        if (!avaliacao.id_cliente){
+            throw new Error('ID cliente está vazio');
+        }
+
+        if(!avaliacao.comentario){
+            throw new Error('Comentario está vazio');
+        }
+
+        if(!avaliacao.avaliacao){
+            throw new Error('Avaliação está vazio');
+        }
+
+        const resposta = await AdicionarAvaliacao(id, avaliacao);
+
+        if (resposta !== 1) {
+            throw new Error('Produto não pode ser alterado.');
+        } else {
+            resp.status(204).send();
+        }
+    }
+    catch(err){
         resp.status(400).send({
             erro: err.message
         })
