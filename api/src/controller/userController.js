@@ -1,4 +1,6 @@
-import { loginCliente, loginAdmin, Novocliente, MudarSenhaAdm, MudarSenhaUser } from '../Repository/userRepository.js';
+import { loginCliente, loginAdmin, Novocliente, MudarSenhaAdm, MudarSenhaUser, InserirFotoPerfil } from '../Repository/userRepository.js';
+import multer from 'multer'; //img DB
+const upload = multer({dest: '/profile_images'});
 
 import { Router } from "express";
 const server = Router();
@@ -94,6 +96,30 @@ server.put('/usuario/New/:id', async (req, resp) => {
     }
 });
 
+server.put('/usuario/:id/imagens', upload.array('imagens', 5), async (req, resp) => {
+    try{
+        const {id} = req.params;
+        const imagens = req.files.map(file => file.path);
+
+        if (!imagens || imagens.length === 0){
+            throw new Error('Escolha sua foto de perfil!')
+        }
+
+        const resposta = await InserirFotoPerfil(imagens[0], id);
+        console.log({resposta});
+
+        if(resposta != 1)
+            throw new Error('A imagem não pode ser salva!')
+
+        resp.status(204).send();
+    }
+    catch(err){
+        console.log(err);
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
 
 server.put('/admin/NewSenha/:id', async (req, resp) => {
     try{

@@ -130,19 +130,26 @@ export async function TBcategoriaProduto(tabela){
 
 export async function BuscarJogoNM(nome){
     const comando = `
-    SELECT id_produto id,
-      id_categoria,
-      id_admin,
-      nm_produto  nome,
-      vl_preco  preco,
-      vl_preco_promocional preco_promocional,
-      bt_destaque destaque,
-      bt_promocao promocao,
-      bt_disponivel disponivel,
-      qtd_estoque quantidade_estoque,
-      ds_descricao descricao
-      FROM tb_produto
-      WHERE nm_produto LIKE ?;`
+   SELECT 
+    p.id_produto AS id,
+    p.id_categoria,
+    p.id_admin,
+    p.nm_produto AS nome,
+    p.vl_preco AS preco,
+    p.vl_preco_promocional AS preco_promocional,
+    p.bt_destaque AS destaque,
+    p.bt_promocao AS promocao,
+    p.bt_disponivel AS disponivel,
+    p.qtd_estoque AS quantidade_estoque,
+    p.ds_descricao AS descricao,
+    pi.img_produto AS img_produto,
+    c.nm_categoria AS nm_categoria
+FROM 
+    tb_produto p
+    LEFT JOIN tb_produto_imagem pi ON p.id_produto = pi.id_produto
+    LEFT JOIN tb_categoria c ON p.id_categoria = c.id_categoria
+WHERE 
+    p.nm_produto LIKE ?;`
       const [linhas] = await conx.query(comando, [`%${nome}%`]);
       return linhas
     }
@@ -320,3 +327,5 @@ export async function SelecioneComentario(id){
   const [linhas] = await conx.query(comando, [id])
   return linhas
 }
+
+

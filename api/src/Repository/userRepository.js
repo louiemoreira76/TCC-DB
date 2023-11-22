@@ -80,3 +80,11 @@ export async function MudarSenhaUser(New, id) {
     return resposta.affectedRows;
 }
 
+export async function InserirFotoPerfil(imagem, id){
+    const comando = `
+    INSERT INTO tb_cliente_imagem (id_cliente, img_cliente)
+    VALUES (?, ?) `;
+  
+    const [resposta] = await conx.query(comando, [id, imagem]);
+    return resposta.affectedRows
+  }
