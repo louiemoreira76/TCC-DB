@@ -286,8 +286,18 @@ export async function ExcluirFavorito(id){
 
 export async function FiltroCategoria(id){
   const comando = `
-  SELECT * FROM tb_produto
-  WHERE id_categoria = ?;`;
+  SELECT 
+  tp.*,
+  tpi.img_produto,
+  tc.nm_categoria
+FROM 
+  tb_produto tp
+JOIN 
+  tb_produto_imagem tpi ON tp.id_produto = tpi.id_produto
+JOIN 
+  tb_categoria tc ON tp.id_categoria = tc.id_categoria
+WHERE 
+  tp.id_categoria = ?;`;
 
   const [linhas] = await conx.query(comando, [id])
   return linhas
