@@ -1,12 +1,13 @@
-import { inserirProduto, todosJogos, alterarProduto, deletarProduto, InserirImagem, TBcategoriaProduto, todosGames,
-        BuscarJogoNM, BuscarJogoID, InserirVideo, MudarImagem, MudarVideo, MudarCproduto, MudarCcategoriap,SelecioneComentario, 
-        InserirFavorito, TodosFavoritados, ExcluirFavorito, FiltroCategoria, AdicionarAvaliacao, BuscarGamesID} from "../Repository/jogoRepository.js"
+import { inserirProduto, todosJogos, alterarProduto, deletarProduto, InserirImagem, TBcategoriaProduto, todosGames,BuscarJogoNM, BuscarJogoID,
+InserirVideo, MudarImagem, MudarVideo, MudarCproduto, MudarCcategoriap,SelecioneComentario, InserirFavorito, TodosFavoritados, ExcluirFavorito, 
+FiltroCategoria, AdicionarAvaliacao, BuscarGamesID, InserirNoticia,ImagemNoticia, NoticiaId} from "../Repository/jogoRepository.js"
 
 import { Router } from 'express';
 const server = Router();
 
 import multer from 'multer'; //img DB
 const upload = multer({dest: 'tools/image'});
+const uploadN = multer({dest: 'tools/now'})
 
 server.post('/produto', async (req, resp) => {
     try {
@@ -506,5 +507,81 @@ server.get(`/comentario/:id`, async(req, resp) => {
     }
 });
 
+server.post(`/noticia/new`, async(req, resp) => {
+    try{
+        const noticia = req.body
 
-export default server;
+    if (!noticia.titulo)
+        throw new Error ('O titulo da noticia é obrigatorio');
+
+    if (!noticia.subtitulo)
+        throw new Error ('O Subtitulo da noticia é obrigatorio');
+
+    if (!noticia.texto)
+        throw new Error ('O texto da noticia é obrigatorio');
+
+    const noticiario = await InserirNoticia(noticia)
+
+    resp.status(200).send({ noticiario });
+    }
+    catch(err){
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
+server.put(`/noticia/:id/imagens`, uploadN.array('imagens', 5), async (req, resp) => {
+    try{
+        const {id} = req.params;
+        const imagens = req.files.map(file => file.path); 
+
+        if (!imagens || imagens.length === 0){
+            throw new Error('Precisa escolher pelo menos uma imagem!')
+        }
+
+        const resposta = await ImagemNoticia(imagens[0], id);
+
+        if(resposta != 1)
+            throw new Error('A imagem não pode ser salva!')
+
+        resp.status(204).send();
+    }
+    catch(err){
+        console.log(err);
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
+server.get(`/noticia`, async (req, resp) => {
+    try{
+        const resposta = await todasNoticias();
+        resp.send(resposta)
+    }
+    catch(err){
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
+server.get(`/noticia/:id`, async (req, resp) => {
+    try{
+        const { id } = req.params;
+
+        if (isNaN(id)) {
+            throw new Error('ID do noticia não é válido.');
+        }
+
+        const resposta = await NoticiaId(id);
+
+        resp.status(200).send(resposta);
+    }
+    catch(err){
+
+    }
+})
+
+export default server; 

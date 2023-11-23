@@ -87,4 +87,36 @@ export async function InserirFotoPerfil(imagem, id){
   
     const [resposta] = await conx.query(comando, [id, imagem]);
     return resposta.affectedRows
-  }
+}
+
+export async function TrocarFoto(imagem, id){
+    const comando = `
+    UPDATE tb_cliente_imagem
+SET img_cliente = ?
+WHERE id_cliente = ?;`
+
+const [resposta] = await conx.query(comando, [id, imagem]);
+return resposta.affectedRows
+}
+
+export async function TudoCliente(id){
+    const comando = `
+    SELECT 
+    tb_cliente.id_cliente,
+    tb_cliente.nm_cliente,
+    tb_cliente.ds_email,
+    tb_cliente.ds_senha,
+    tb_cliente.ds_telefone,
+    tb_cliente.ds_cpf,
+    tb_cliente_imagem.id_cliente_img,
+    tb_cliente_imagem.img_cliente
+FROM 
+    tb_cliente
+LEFT JOIN 
+    tb_cliente_imagem ON tb_cliente.id_cliente = tb_cliente_imagem.id_cliente
+WHERE 
+    tb_cliente.id_cliente = ?;
+`
+const [linhas] = await conx.query(comando, [id])
+return linhas
+}

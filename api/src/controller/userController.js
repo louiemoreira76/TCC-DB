@@ -1,6 +1,6 @@
-import { loginCliente, loginAdmin, Novocliente, MudarSenhaAdm, MudarSenhaUser, InserirFotoPerfil } from '../Repository/userRepository.js';
+import { loginCliente, loginAdmin, Novocliente, MudarSenhaAdm, MudarSenhaUser, InserirFotoPerfil, TudoCliente, TrocarFoto } from '../Repository/userRepository.js';
 import multer from 'multer'; //img DB
-const upload = multer({dest: '/profile_images'});
+const upload = multer({dest: 'tools/profile_images'});
 
 import { Router } from "express";
 const server = Router();
@@ -105,6 +105,10 @@ server.put('/usuario/:id/imagens', upload.array('imagens', 5), async (req, resp)
             throw new Error('Escolha sua foto de perfil!')
         }
 
+        if (id === 0 || id === null) {
+            throw new Error('Você não está logado!')
+        }
+
         const resposta = await InserirFotoPerfil(imagens[0], id);
         console.log({resposta});
 
@@ -120,6 +124,54 @@ server.put('/usuario/:id/imagens', upload.array('imagens', 5), async (req, resp)
         })
     }
 })
+
+server.put('/usuario/:id/mudar', upload.array('imagens', 5), async (req, resp) => {
+    try{
+        const {id} = req.params;
+        const imagens = req.files.map(file => file.path); // Array de arquivos de imagem, por isso files
+
+        if (!imagens || imagens.length === 0){
+            throw new Error('Precisa escolher pelo menos uma imagem!')
+        }
+
+        const resposta = await TrocarFoto(id, imagens[0]);
+        console.log({resposta});
+
+        if(resposta != 1)
+        throw new Error('A imagem não pode ser salva!')
+
+        resp.status(204).send();
+    }
+    catch(err){
+        console.log(err);
+        resp.status(400).send({
+            erro: err.message
+        })
+    }
+})
+
+server.get('/usuario/:id', async (req, resp) => {
+    try{
+        const { id } = req.params
+
+        if (!id) {
+            resp.status(400).send({ erro: 'O parâmetro "id" é obrigatório.' });
+            return;
+        }
+
+        const resposta = await TudoCliente(id);
+
+        if (!resposta) {
+            resp.status(404).send([]);
+        } else {
+            resp.send(resposta);
+        }
+    } catch (err) {
+        resp.status(500).send({
+            erro: err.message
+        });
+    }
+});
 
 server.put('/admin/NewSenha/:id', async (req, resp) => {
     try{

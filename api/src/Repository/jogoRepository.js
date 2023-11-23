@@ -328,4 +328,36 @@ export async function SelecioneComentario(id){
   return linhas
 }
 
+export async function InserirNoticia(noticia){
+  const comando = `INSERT INTO tb_noticia (ds_titulo, ds_subtitulo, ds_texto)
+  VALUES (?, ?, ?);`
 
+  const [resposta] = await conx.query(comando, [noticia.titulo, noticia.subtitulo, noticia.texto])
+  return resposta.affectedRows
+}
+
+export async function ImagemNoticia(imagem, id){
+  const comando = `
+  INSERT INTO tb_noticia_imagem (id_noticia, img_produto)
+  VALUES (?, ?);`
+
+  const [resposta] = await conx.query(comando, [id, imagem]);
+  return resposta.affectedRows
+}
+
+export async function todasNoticias(){
+  const comando = `SELECT * FROM tb_noticia
+  LEFT JOIN tb_noticia_imagem ON tb_noticia.id_noticia = tb_noticia_imagem.id_noticia;`
+
+  const [linhas] = await conx.query(comando);
+  return linhas;
+}
+
+export async function NoticiaId(id){
+  const comando = `SELECT * FROM tb_noticia
+  LEFT JOIN tb_noticia_imagem ON tb_noticia.id_noticia = tb_noticia_imagem.id_noticia
+  WHERE tb_noticia.id_noticia = ?;`
+
+  const [linhas] = await conx.query(comando, [id]);
+  return linhas;
+}

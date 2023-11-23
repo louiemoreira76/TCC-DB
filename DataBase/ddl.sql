@@ -1,6 +1,6 @@
-CREATE DATABASE GameSync;
+CREATE DATABASE GameSyncDB;
 
-USE GameSync;
+USE GameSyncDB;
 
 CREATE TABLE tb_admin (
 	id_admin int primary key auto_increment,
@@ -18,6 +18,17 @@ CREATE TABLE tb_cliente (
 	ds_senha varchar(200),
 	ds_telefone varchar(25),
 	ds_cpf varchar(15) UNIQUE
+);
+
+UPDATE tb_cliente_imagem
+SET img_cliente = 'EGDRGFN'
+WHERE id_cliente = 1;
+
+CREATE TABLE tb_cliente_imagem (
+    id_cliente_img INT PRIMARY KEY AUTO_INCREMENT,
+    id_cliente INT unique,	
+    img_cliente VARCHAR(255),
+    FOREIGN KEY (id_cliente) REFERENCES tb_cliente (id_cliente)
 );
 
 CREATE TABLE tb_categoria (
@@ -115,4 +126,18 @@ nm_jogo VARCHAR(100),
 ds_descricao TEXT,
 img_jogo	VARCHAR(255),
 url_jogo	VARCHAR(255) 
+);
+
+CREATE TABLE tb_noticia(
+id_noticia	INT PRIMARY KEY AUTO_INCREMENT,
+ds_titulo	VARCHAR(50),
+ds_subtitulo VARCHAR(50),
+ds_texto TEXT
+);
+
+CREATE TABLE tb_noticia_imagem (
+    id_noticia_img INT PRIMARY KEY AUTO_INCREMENT,
+    id_noticia INT,	
+    img_produto VARCHAR(255),
+    FOREIGN KEY (id_noticia) REFERENCES tb_noticia (id_noticia) ON DELETE CASCADE
 );

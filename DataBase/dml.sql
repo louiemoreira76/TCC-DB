@@ -1,4 +1,4 @@
-USE GameSync;
+USE GameSyncDB;
 
 -- carga inicial usuario adim
 INSERT INTO tb_admin (nm_admin, ds_email, ds_senha, vl_codigo)
