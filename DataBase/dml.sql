@@ -3,10 +3,10 @@ USE GameSyncDB;
 -- carga inicial usuario adim
 INSERT INTO tb_admin (nm_admin, ds_email, ds_senha, vl_codigo)
 VALUES 
-    ('Luis Felipi', '@Luis.com.br', '1234', 'JK$)@),S(:#-JZb(K*.):h7}Ff}9;CZ|'),
-    ('Davi Matinho', 'davi@example.com', 'davi', '£h-I4VWQ4bCj8I=8/=304Fu\RrQT8~DfNgBJA`,JRjhYAM>2[`'),
+    ('Luis Felipi', 'Luis@L.com.br', '1234', 'JK$)@),S(:#-JZb(K*.):h7}Ff}9;CZ|'),
+    ('Davi Matinho', 'davi@example.com', 'davi', '5m851ouamBSk2Kug1DyGoFJgI1yWlSYEuLcAWFcpfxkb9Hmz82'),
     ('Juan Oliveira', 'juan@example.com', 'juan', 'x^,zbp_XK[3Lt}@GYLA{OKI!qiMc;5/z40£YNW:6m<{mMflt4q'),
-    ('Felipe Pereira', 'felipe@example.com', 'felipe', 'jcR'']BI~D2w92X}4Hpl)}E=3kFeo.?nlCnZLv$4Ky<P3K/i.T');
+    ('Felipe Pereira', 'felipe@example.com', 'felipe', '00W6BEkVrr112uI1nhYlB95cV6qDEeBQ6XU77snbi0srVMg6ec');
 
 -- Inserir um novo cliente
 INSERT INTO tb_cliente (nm_cliente, ds_telefone, ds_cpf, ds_email, ds_senha)

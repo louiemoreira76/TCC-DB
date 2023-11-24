@@ -507,29 +507,28 @@ server.get(`/comentario/:id`, async(req, resp) => {
     }
 });
 
-server.post(`/noticia/new`, async(req, resp) => {
-    try{
-        const noticia = req.body
+server.post(`/noticia/new`, async (req, resp) => {
+    try {
+        const noticia = req.body;
 
-    if (!noticia.titulo)
-        throw new Error ('O titulo da noticia é obrigatorio');
+        if (!noticia.titulo)
+            throw new Error('O título da notícia é obrigatório');
 
-    if (!noticia.subtitulo)
-        throw new Error ('O Subtitulo da noticia é obrigatorio');
+        if (!noticia.subtitulo)
+            throw new Error('O subtitulo da notícia é obrigatório');
 
-    if (!noticia.texto)
-        throw new Error ('O texto da noticia é obrigatorio');
+        if (!noticia.texto)
+            throw new Error('O texto da notícia é obrigatório');
 
-    const noticiario = await InserirNoticia(noticia)
+        const idNoticia = await InserirNoticia(noticia.titulo, noticia.subtitulo, noticia.texto);
 
-    resp.status(200).send({ noticiario });
-    }
-    catch(err){
+        resp.status(200).send({ id: idNoticia });
+    } catch (err) {
         resp.status(400).send({
             erro: err.message
-        })
+        });
     }
-})
+});
 
 server.put(`/noticia/:id/imagens`, uploadN.array('imagens', 5), async (req, resp) => {
     try{
